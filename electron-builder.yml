@@ -11,6 +11,7 @@ files:
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 asarUnpack:
   - resources/**
+  - "**/node_modules/better-sqlite3/**"
 win:
   executableName: kept
 nsis:
@@ -35,7 +36,7 @@ linux:
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}
-npmRebuild: false
+npmRebuild: true
 # No `publish`/auto-update config: Kept is local-first with zero network access
 # (AC #5, NFR1/NFR2/FR31). The electron-builder template default pointed at a
 # remote update server — removed deliberately. Do not re-add an updater.

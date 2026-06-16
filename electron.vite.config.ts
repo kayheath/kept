@@ -36,7 +36,13 @@ function devCspPlugin(): Plugin {
 }
 
 export default defineConfig({
-  main: {},
+  main: {
+    build: {
+      rollupOptions: {
+        external: ['better-sqlite3']
+      }
+    }
+  },
   preload: {},
   renderer: {
     resolve: {

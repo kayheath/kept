@@ -2,6 +2,7 @@ import { app, BrowserWindow, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { disconnectPrisma } from './db/client'
 
 // Minimal Content-Security-Policy: the renderer may load only local content.
 // No remote origins are permitted. 'unsafe-inline' for styles is required by
@@ -13,9 +14,7 @@ import icon from '../../resources/icon.png?asset'
 //   script-src — Vite Fast Refresh injects an inline <script> + uses eval
 //   connect-src — HMR WebSocket and the local dev server HTTP origin
 // The shipped build is unaffected by either relaxation.
-const scriptSrc = is.dev
-  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
-  : "script-src 'self'"
+const scriptSrc = is.dev ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'" : "script-src 'self'"
 const connectSrc = is.dev
   ? "connect-src 'self' ws://localhost:* http://localhost:*"
   : "connect-src 'self'"
@@ -133,6 +132,20 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// Close the SQLite connection cleanly on quit. Electron does NOT await Promises
+// returned from 'before-quit', so we hold the quit open ourselves: cancel the
+// first quit, run the async disconnect, then re-issue the quit. The flag stops
+// the re-issued quit from looping back into the cleanup.
+let cleanupDone = false
+app.on('before-quit', (event) => {
+  if (cleanupDone) return
+  event.preventDefault()
+  disconnectPrisma().finally(() => {
+    cleanupDone = true
+    app.quit()
+  })
 })
 
 // In this file you can include the rest of your app's specific main process
