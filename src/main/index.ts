@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { disconnectPrisma } from './db/client'
+import { registerIpcHandlers } from './ipc'
 
 // Minimal Content-Security-Policy: the renderer may load only local content.
 // No remote origins are permitted. 'unsafe-inline' for styles is required by
@@ -115,6 +116,9 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  // Register IPC handlers before any window can invoke them (AC #2).
+  registerIpcHandlers()
 
   createWindow()
 
