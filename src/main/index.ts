@@ -5,14 +5,27 @@ import icon from '../../resources/icon.png?asset'
 
 // Minimal Content-Security-Policy: the renderer may load only local content.
 // No remote origins are permitted. 'unsafe-inline' for styles is required by
-// Vite (dev) and our bespoke CSS; scripts stay restricted to 'self'.
+// Vite (dev) and our bespoke CSS.
+//
+// Dev relaxations (applied in BOTH this header CSP and the <meta> CSP via the
+// transformIndexHtml plugin in electron.vite.config.ts — CSPs combine by
+// intersection, so both layers must permit it):
+//   script-src — Vite Fast Refresh injects an inline <script> + uses eval
+//   connect-src — HMR WebSocket and the local dev server HTTP origin
+// The shipped build is unaffected by either relaxation.
+const scriptSrc = is.dev
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+  : "script-src 'self'"
+const connectSrc = is.dev
+  ? "connect-src 'self' ws://localhost:* http://localhost:*"
+  : "connect-src 'self'"
 const CSP = [
   "default-src 'self'",
-  "script-src 'self'",
+  scriptSrc,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self' data:",
-  "connect-src 'self' ws://localhost:* http://localhost:*",
+  connectSrc,
   // base-uri and form-action do not fall back to default-src, so pin them
   // explicitly; object-src 'none' blocks plugin/embed vectors.
   "base-uri 'self'",
@@ -53,12 +66,19 @@ function createWindow(): void {
   // setWindowOpenHandler only covers new windows. Also block in-place
   // navigation (link, location.assign, form submit) away from local content
   // so the trusted window can never be steered to a remote/file origin.
+  // Origin equality (not startsWith) prevents port-prefix spoofing, e.g.
+  // http://localhost:51730/ matching a dev server at http://localhost:5173.
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    const isDevServer =
-      is.dev &&
-      process.env['ELECTRON_RENDERER_URL'] &&
-      url.startsWith(process.env['ELECTRON_RENDERER_URL'])
-    if (!isDevServer) {
+    if (!is.dev || !process.env['ELECTRON_RENDERER_URL']) {
+      event.preventDefault()
+      return
+    }
+    try {
+      const allowed = new URL(process.env['ELECTRON_RENDERER_URL']).origin
+      if (new URL(url).origin !== allowed) {
+        event.preventDefault()
+      }
+    } catch {
       event.preventDefault()
     }
   })
