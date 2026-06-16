@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K's voice — typewriter / typed-note direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cutive+Mono&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #16191A;
+    color: #E0B27C;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    padding: 56px 24px 80px;
+  }
+
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    color: #9AA08C;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .intro strong {
+    color: #E0B27C;
+    font-weight: 600;
+  }
+
+  .card {
+    background: rgba(224, 178, 124, 0.10);
+    border: 1px dashed #E0B27C;
+    border-radius: 10px;
+    padding: 28px 30px 30px;
+    margin-bottom: 32px;
+    box-shadow: 0 0 28px rgba(233, 208, 138, 0.10),
+                0 2px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  .eyebrow {
+    color: #9AA08C;
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .eyebrow .name {
+    color: #E9D08A;
+    font-weight: 600;
+  }
+
+  .eyebrow .reg {
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  .note {
+    color: #E0B27C;
+    font-size: 19px;
+    line-height: 1.65;
+  }
+
+  .note .sig {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  /* Per-font tuning */
+  .f-special  { font-family: "Special Elite", monospace; font-size: 18px; line-height: 1.7; }
+  .f-courier  { font-family: "Courier Prime", monospace; font-size: 19px; }
+  .f-cutive   { font-family: "Cutive Mono", monospace; font-size: 18px; line-height: 1.7; }
+  .f-plex     { font-family: "IBM Plex Mono", monospace; font-size: 18px; }
+  .f-space    { font-family: "Space Mono", monospace; font-size: 18px; line-height: 1.7; }
+  .f-vt       { font-family: "VT323", monospace; font-size: 26px; line-height: 1.4; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="intro"><strong>K's voice</strong> — typewriter / typed-note direction.</p>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">Special Elite</span><span class="reg">vintage distressed typewriter, inked keys</span></div>
+      <p class="note f-special">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">Courier Prime</span><span class="reg">refined classic typed-letter benchmark</span></div>
+      <p class="note f-courier">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">Cutive Mono</span><span class="reg">minimal even mono, understated</span></div>
+      <p class="note f-cutive">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">IBM Plex Mono</span><span class="reg">warm modern monospace, contemporary</span></div>
+      <p class="note f-plex">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">Space Mono</span><span class="reg">retro-modern mono with personality</span></div>
+      <p class="note f-space">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow"><span class="name">VT323</span><span class="reg">pixel/terminal mono, retro-game nod</span></div>
+      <p class="note f-vt">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. <span class="sig">— K</span></p>
+    </div>
+  </div>
+</body>
+</html>

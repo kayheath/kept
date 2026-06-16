@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kept — Key Screens (Candlelit Sage)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Pixelify+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A; --surface:#232A28; --text:#E4E5D8; --muted:#9AA08C;
+    --growth:#9DBE9A; --growth-2:#7BA37F; --earth:#AD6A38; --earth-2:#C2814C;
+    --note:#E0B27C; --note-bg:rgba(224,178,124,0.10); --bloom:#E9D08A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 78% -10%, rgba(233,208,138,0.10), transparent 60%),
+      radial-gradient(900px 600px at 10% 110%, rgba(173,106,56,0.07), transparent 60%),
+      #0E1011;
+    color:var(--text);
+    font-family:"Inter","Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:56px 24px 96px;
+  }
+  .page-head{max-width:1100px;margin:0 auto 40px;}
+  .page-head h1{font-weight:300;letter-spacing:0.04em;font-size:26px;margin:0 0 6px;color:var(--text);}
+  .page-head p{margin:0;color:var(--muted);font-size:14px;font-weight:300;}
+
+  /* The desktop window frame */
+  .window{
+    max-width:1100px;width:1100px;margin:0 auto;
+    background:var(--base);
+    border:1px solid rgba(255,255,255,0.05);
+    border-radius:14px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.03);
+    overflow:hidden;
+  }
+  .titlebar{
+    height:38px;display:flex;align-items:center;gap:8px;
+    padding:0 16px;background:rgba(255,255,255,0.02);
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.a{background:var(--earth-2);} .dot.b{background:var(--growth-2);} .dot.c{background:var(--muted);}
+  .titlebar .name{margin-left:12px;color:var(--muted);font-size:12px;letter-spacing:0.18em;text-transform:lowercase;}
+
+  .caption{
+    max-width:1100px;margin:14px auto 64px;color:var(--muted);
+    font-size:13.5px;font-weight:300;line-height:1.6;text-align:center;font-style:italic;
+  }
+  .caption b{color:var(--growth);font-style:normal;font-weight:400;}
+
+  /* K's pixel love-note voice (Pixelify Sans — final decision) */
+  .note{
+    font-family:"Pixelify Sans","Inter",sans-serif;
+    color:var(--note);font-size:20px;line-height:1.5;letter-spacing:0.01em;
+  }
+  .note .sign{display:block;text-align:right;font-size:19px;opacity:0.85;margin-top:6px;}
+
+  /* ---------- Pixel pots & plants ---------- */
+  .pot{display:inline-flex;flex-direction:column;align-items:center;width:74px;vertical-align:bottom;}
+  .grid{
+    display:grid;grid-template-columns:repeat(5,8px);grid-template-rows:repeat(5,8px);
+    gap:2px;margin-bottom:5px;height:50px;align-content:end;
+  }
+  .grid span{width:8px;height:8px;border-radius:1px;}
+  .leaf{background:var(--growth);}
+  .leaf2{background:var(--growth-2);}
+  .stem{background:var(--growth-2);}
+  .flower{background:var(--bloom);box-shadow:0 0 6px rgba(233,208,138,0.6);}
+  .empty{background:transparent;}
+  .rim{width:54px;height:10px;background:var(--earth-2);border-radius:4px 4px 2px 2px;}
+  .body{width:46px;height:26px;background:var(--earth);
+    clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);border-radius:0 0 5px 5px;}
+  .seedling .grid span{opacity:0.9;}
+
+  /* ====================================================== */
+  /* SCREEN 1 — THE CALM HOME                               */
+  /* ====================================================== */
+  .home{padding:62px 70px 54px;position:relative;min-height:560px;}
+  .home .eyebrow{color:var(--muted);font-size:11px;letter-spacing:0.32em;text-transform:uppercase;text-align:center;margin-bottom:46px;}
+  .focus{text-align:center;max-width:640px;margin:0 auto;}
+  .focus .label{color:var(--growth);font-size:12px;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:20px;opacity:0.85;}
+  .focus .task{font-size:38px;font-weight:300;line-height:1.3;letter-spacing:0.01em;color:var(--text);}
+  .focus .breath{color:var(--muted);font-size:15px;font-weight:300;margin-top:18px;}
+  .nextline{
+    text-align:center;margin:42px auto 0;color:var(--muted);font-size:13px;font-weight:300;opacity:0.6;
+  }
+  .nextline .k{color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:6px;opacity:0.7;}
+
+  .home .note{max-width:520px;margin:54px auto 0;text-align:center;}
+  .home .note .sign{text-align:center;}
+
+  .garden{margin-top:62px;text-align:center;}
+  .garden .glabel{color:var(--muted);font-size:11px;letter-spacing:0.24em;text-transform:uppercase;margin-bottom:24px;opacity:0.8;}
+  .pots{display:flex;justify-content:center;align-items:flex-end;gap:18px;flex-wrap:wrap;}
+
+  .peek-link{
+    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+    color:var(--muted);font-size:12.5px;font-weight:300;text-decoration:none;
+    border-bottom:1px dotted rgba(154,160,140,0.4);padding-bottom:3px;letter-spacing:0.04em;
+  }
+  /* ambient decor plants */
+  .ambient{position:absolute;opacity:0.85;}
+  .ambient.tl{top:60px;left:40px;}
+  .ambient.br{bottom:64px;right:48px;}
+
+  /* ====================================================== */
+  /* SCREEN 2 — SHOW ME MY DAY                              */
+  /* ====================================================== */
+  .day{position:relative;background:rgba(0,0,0,0.22);padding:0;}
+  .day .scrim{padding:48px 64px 56px;}
+  .day .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;}
+  .day h3{font-weight:300;font-size:22px;margin:0;letter-spacing:0.02em;color:var(--text);}
+  .day .date{color:var(--muted);font-size:12.5px;font-weight:300;margin-top:5px;letter-spacing:0.04em;}
+  .home-back{color:var(--growth);font-size:12.5px;text-decoration:none;font-weight:300;border-bottom:1px dotted rgba(157,190,154,0.4);padding-bottom:3px;}
+
+  .buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .bucket{
+    background:var(--surface);border:1px solid rgba(255,255,255,0.04);
+    border-radius:12px;padding:22px 22px 24px;
+  }
+  .bucket .head{display:flex;align-items:baseline;gap:10px;margin-bottom:18px;}
+  .bucket .head .b-name{color:var(--growth);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;}
+  .bucket .head .b-sub{color:var(--muted);font-size:11px;font-weight:300;opacity:0.7;}
+  .item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.035);}
+  .item:last-child{border-bottom:none;}
+  .check{width:15px;height:15px;border:1.5px solid var(--muted);border-radius:50%;flex:none;margin-top:2px;opacity:0.7;}
+  .item .it-text{font-size:15px;font-weight:300;line-height:1.4;}
+  .item .meta{color:var(--muted);font-size:11px;font-weight:300;margin-top:3px;opacity:0.65;}
+  .item.done .check{background:var(--growth-2);border-color:var(--growth-2);position:relative;}
+  .item.done .check::after{content:"";position:absolute;left:4px;top:1.5px;width:4px;height:8px;border:solid var(--base);border-width:0 1.6px 1.6px 0;transform:rotate(45deg);}
+  .item.done .it-text{color:var(--muted);}
+  .deadline{
+    margin-top:14px;color:var(--muted);font-size:11px;font-weight:300;
+    opacity:0.55;display:flex;align-items:center;gap:7px;letter-spacing:0.02em;
+  }
+  .deadline .pip{width:6px;height:6px;border-radius:50%;background:var(--earth-2);opacity:0.6;}
+  .day .footnote{text-align:center;color:var(--muted);font-size:12px;font-weight:300;margin-top:34px;opacity:0.7;}
+
+  /* ====================================================== */
+  /* SCREEN 3 — THE COMPLETION BLOOM                        */
+  /* ====================================================== */
+  .bloom-screen{padding:56px 70px 60px;position:relative;text-align:center;min-height:560px;
+    background:radial-gradient(620px 420px at 50% 38%, rgba(233,208,138,0.10), transparent 70%);}
+  .bloom-screen .stage-label{color:var(--muted);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:36px;opacity:0.7;}
+
+  /* the drifting task */
+  .drift{
+    display:inline-block;background:var(--surface);border:1px solid rgba(157,190,154,0.18);
+    border-radius:11px;padding:16px 30px;color:var(--muted);font-size:16px;font-weight:300;
+    opacity:0.55;transform:translateY(8px) scale(0.96);
+    box-shadow:0 8px 30px rgba(0,0,0,0.3);
+  }
+  .drift .done-mark{display:inline-block;width:13px;height:13px;border-radius:50%;background:var(--growth-2);margin-right:10px;vertical-align:middle;position:relative;}
+  .drift .done-mark::after{content:"";position:absolute;left:3.5px;top:1px;width:4px;height:7px;border:solid var(--base);border-width:0 1.6px 1.6px 0;transform:rotate(45deg);}
+  .drift-trail{height:54px;width:2px;margin:6px auto;
+    background:linear-gradient(to bottom, rgba(157,190,154,0.35), transparent);}
+
+  /* the pot blooming a new sprout */
+  .bloom-pot{margin:8px auto 0;display:inline-flex;flex-direction:column;align-items:center;}
+  .bloom-pot .grid span.flower{box-shadow:0 0 12px rgba(233,208,138,0.85);}
+  .bloom-pot .halo{
+    width:120px;height:120px;border-radius:50%;margin:-4px auto -56px;
+    background:radial-gradient(circle, rgba(233,208,138,0.22), transparent 70%);
+    position:relative;z-index:0;
+  }
+  .grew{color:var(--growth);font-size:14px;font-weight:300;margin-top:18px;opacity:0.9;}
+
+  /* the blooming love-note */
+  .bloom-note{
+    max-width:560px;margin:46px auto 0;position:relative;
+    background:var(--note-bg);
+    border:1px solid rgba(233,208,138,0.22);
+    border-radius:16px;padding:34px 40px;
+    box-shadow:0 0 60px rgba(233,208,138,0.16), inset 0 0 30px rgba(233,208,138,0.05);
+    transform:scale(1.02);
+  }
+  .bloom-note::before{
+    content:"";position:absolute;inset:-30px;border-radius:30px;z-index:-1;
+    background:radial-gradient(circle at 50% 50%, rgba(233,208,138,0.16), transparent 70%);
+  }
+  .bloom-note .note{font-size:21px;line-height:1.5;color:var(--bloom);}
+  .bloom-note .note .sign{font-size:20px;color:var(--note);}
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <h1>Kept — Key Screens</h1>
+    <p>Candlelit Sage · a calm, offline desktop todo app for Christopher · UX session 2026-06-15</p>
+  </div>
+
+  <!-- ================= SCREEN 1 ================= -->
+  <div class="window">
+    <div class="titlebar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="name">kept</span></div>
+    <div class="home">
+
+      <!-- ambient decor -->
+      <div class="ambient tl">
+        <div class="pot">
+          <div class="grid">
+            <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="leaf2"></span><span class="leaf"></span><span class="leaf2"></span><span class="empty"></span>
+            <span class="empty"></span><span class="leaf"></span><span class="stem"></span><span class="leaf"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+          </div>
+          <div class="rim"></div><div class="body"></div>
+        </div>
+      </div>
+      <div class="ambient br">
+        <div class="pot">
+          <div class="grid">
+            <span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="leaf2"></span><span class="stem"></span><span class="leaf"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+          </div>
+          <div class="rim"></div><div class="body"></div>
+        </div>
+      </div>
+
+      <div class="eyebrow">Sunday morning · just today</div>
+
+      <div class="focus">
+        <div class="label">One calm thing</div>
+        <div class="task">Read one chapter for seminar</div>
+        <div class="breath">A few pages count too. No rush — it'll wait for you.</div>
+      </div>
+
+      <div class="nextline">
+        <span class="k">and after, if you'd like</span>
+        Water the basil on the sill
+      </div>
+
+      <div class="note">Whatever today holds, I'm proud of you.<span class="sign">— K</span></div>
+
+      <div class="garden">
+        <div class="glabel">Things you've grown today</div>
+        <div class="pots">
+          <!-- a full bloom -->
+          <div class="pot">
+            <div class="grid">
+              <span class="empty"></span><span class="empty"></span><span class="flower"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="leaf"></span><span class="leaf2"></span><span class="leaf"></span><span class="empty"></span>
+              <span class="leaf"></span><span class="leaf2"></span><span class="stem"></span><span class="leaf2"></span><span class="leaf"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            </div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+          <!-- leafy -->
+          <div class="pot">
+            <div class="grid">
+              <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="leaf2"></span><span class="leaf"></span><span class="leaf2"></span><span class="empty"></span>
+              <span class="empty"></span><span class="leaf"></span><span class="stem"></span><span class="leaf"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            </div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+          <!-- sprout -->
+          <div class="pot">
+            <div class="grid">
+              <span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="leaf2"></span><span class="stem"></span><span class="leaf"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            </div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+          <!-- emoji sprout, mid stage -->
+          <div class="pot">
+            <div class="grid" style="font-size:22px;line-height:1;align-items:end;justify-items:center;display:flex;justify-content:center;">🌿</div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+          <!-- just-planted seedling -->
+          <div class="pot seedling">
+            <div class="grid" style="display:flex;align-items:end;justify-content:center;font-size:18px;">🌱</div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+          <!-- next empty pot, waiting to grow -->
+          <div class="pot" style="opacity:0.4;">
+            <div class="grid"></div>
+            <div class="rim"></div><div class="body"></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="peek-link" href="#">show me my day</a>
+    </div>
+  </div>
+  <div class="caption"><b>Screen 1 — The calm home.</b> One task held in focus, the rest of the day folded gently out of sight. The done-garden fills in with terracotta pots and pixel plants at growing stages — celebrating what's finished, never counting what's left. A handwritten note from K, and a quiet "show me my day" that never shouts.</div>
+
+  <!-- ================= SCREEN 2 ================= -->
+  <div class="window">
+    <div class="titlebar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="name">kept · your day</span></div>
+    <div class="day">
+      <div class="scrim">
+        <div class="topbar">
+          <div>
+            <h3>Just today</h3>
+            <div class="date">Sunday, June 15 · a soft look, then back to one thing</div>
+          </div>
+          <a class="home-back" href="#">← back to calm</a>
+        </div>
+
+        <div class="buckets">
+          <div class="bucket">
+            <div class="head"><span class="b-name">Now</span><span class="b-sub">while it's quiet</span></div>
+            <div class="item">
+              <span class="check"></span>
+              <div><div class="it-text">Read one chapter for seminar</div><div class="meta">do today · gentle pace</div></div>
+            </div>
+            <div class="item done">
+              <span class="check"></span>
+              <div><div class="it-text">Make a warm breakfast</div><div class="meta">grown this morning</div></div>
+            </div>
+          </div>
+
+          <div class="bucket">
+            <div class="head"><span class="b-name">Next</span><span class="b-sub">when you're ready</span></div>
+            <div class="item">
+              <span class="check"></span>
+              <div><div class="it-text">Water the basil on the sill</div><div class="meta">do today</div></div>
+            </div>
+            <div class="item">
+              <span class="check"></span>
+              <div><div class="it-text">Reply to Dr. Reyes' email</div><div class="meta">do today</div></div>
+            </div>
+            <div class="deadline"><span class="pip"></span>held quietly: due Thursday — plenty of room</div>
+          </div>
+
+          <div class="bucket">
+            <div class="head"><span class="b-name">Later</span><span class="b-sub">no need to look yet</span></div>
+            <div class="item">
+              <span class="check"></span>
+              <div><div class="it-text">Pick up the dry cleaning</div><div class="meta">whenever it suits</div></div>
+            </div>
+            <div class="item">
+              <span class="check"></span>
+              <div><div class="it-text">Call the dentist to reschedule</div><div class="meta">do this week</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footnote">That's all of today. Nothing is overdue — it's all just waiting kindly.</div>
+      </div>
+    </div>
+  </div>
+  <div class="caption"><b>Screen 2 — Show me my day.</b> The gentle peek opens dimmed and today-scoped only. Three small buckets — Now · Next · Later — each holding just two or three finishable things, never a wall. The two-date model shows quietly: a do-date organizes the day while a hard deadline rests in the background as a muted safety net, never a threat. A clear, calm way back to home.</div>
+
+  <!-- ================= SCREEN 3 ================= -->
+  <div class="window">
+    <div class="titlebar"><span class="dot a"></span><span class="dot b"></span><span class="dot c"></span><span class="name">kept</span></div>
+    <div class="bloom-screen">
+      <div class="stage-label">a moment, held</div>
+
+      <div class="drift"><span class="done-mark"></span>Read one chapter for seminar</div>
+      <div class="drift-trail"></div>
+
+      <div class="bloom-pot">
+        <div class="halo"></div>
+        <div class="pot" style="z-index:1;">
+          <div class="grid">
+            <span class="empty"></span><span class="empty"></span><span class="flower"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="leaf"></span><span class="leaf2"></span><span class="leaf"></span><span class="empty"></span>
+            <span class="empty"></span><span class="leaf2"></span><span class="stem"></span><span class="leaf"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+            <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+          </div>
+          <div class="rim"></div><div class="body"></div>
+        </div>
+      </div>
+      <div class="grew">a new leaf unfurled — something quiet took root 🌱</div>
+
+      <div class="bloom-note">
+        <div class="note">Look how far you've come, Christopher. 🌱<span class="sign">— K</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="caption"><b>Screen 3 — The completion bloom.</b> The slow completion ritual mid-moment: the finished task drifts softly down into the done-garden as a fresh sprout unfurls in its terracotta pot. One of K's notes blooms in with a warm pale-gold glow, set apart and handwritten. This is "done and cared for" — not a clinical checkmark, but a small, slow act of being seen.</div>
+
+</body>
+</html>

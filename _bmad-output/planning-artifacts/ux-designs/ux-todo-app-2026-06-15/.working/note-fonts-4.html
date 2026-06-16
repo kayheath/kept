@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>K's voice — pixel / bitmap round</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Pixelify+Sans:wght@400..700&family=DotGothic16&family=Silkscreen:wght@400;700&family=Jersey+10&family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page-bg: #16191A;
+    --card-bg: rgba(224,178,124,0.10);
+    --note-gold: #E0B27C;
+    --glow: #E9D08A;
+    --muted: #9AA08C;
+    --border: #E0B27C;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page-bg);
+    color: var(--note-gold);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.5;
+    padding: 48px 20px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .intro {
+    color: var(--muted);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    margin: 0 0 40px;
+    text-align: center;
+    font-style: italic;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 26px 28px 24px;
+    margin: 0 0 30px;
+    box-shadow: 0 0 24px rgba(233,208,138,0.10), 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .eyebrow {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+    text-transform: none;
+  }
+  .eyebrow .fav {
+    color: var(--glow);
+    font-style: italic;
+  }
+  .note {
+    color: var(--note-gold);
+    margin: 0 0 18px;
+    text-shadow: 0 0 10px rgba(233,208,138,0.18);
+  }
+  .small-line {
+    color: var(--note-gold);
+    opacity: 0.82;
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(224,178,124,0.28);
+  }
+
+  /* Per-font sizing for comfortable reading */
+  .f-vt323 .note      { font-family: 'VT323', monospace; font-size: 30px; line-height: 1.35; }
+  .f-vt323 .small-line{ font-family: 'VT323', monospace; font-size: 19px; }
+
+  .f-pixelify .note      { font-family: 'Pixelify Sans', sans-serif; font-size: 22px; line-height: 1.55; }
+  .f-pixelify .small-line{ font-family: 'Pixelify Sans', sans-serif; font-size: 14px; }
+
+  .f-dotgothic .note      { font-family: 'DotGothic16', sans-serif; font-size: 21px; line-height: 1.6; }
+  .f-dotgothic .small-line{ font-family: 'DotGothic16', sans-serif; font-size: 14px; }
+
+  .f-silkscreen .note      { font-family: 'Silkscreen', cursive; font-size: 16px; line-height: 1.9; letter-spacing: 0.01em; }
+  .f-silkscreen .small-line{ font-family: 'Silkscreen', cursive; font-size: 11px; line-height: 1.7; }
+
+  .f-jersey .note      { font-family: 'Jersey 10', sans-serif; font-size: 28px; line-height: 1.4; }
+  .f-jersey .small-line{ font-family: 'Jersey 10', sans-serif; font-size: 18px; }
+
+  .f-handjet .note      { font-family: 'Handjet', sans-serif; font-size: 26px; line-height: 1.5; }
+  .f-handjet .small-line{ font-family: 'Handjet', sans-serif; font-size: 16px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="intro">K's voice — pixel / bitmap round, to match the plants.</p>
+
+    <div class="card f-vt323">
+      <p class="eyebrow">🌱 VT323 — warm terminal glow, cozy &amp; familiar <span class="fav">(your current favorite)</span></p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+
+    <div class="card f-pixelify">
+      <p class="eyebrow">🌱 Pixelify Sans — modern, friendly, very readable</p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+
+    <div class="card f-dotgothic">
+      <p class="eyebrow">🌱 DotGothic16 — even bitmap gothic, clean &amp; calm</p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+
+    <div class="card f-silkscreen">
+      <p class="eyebrow">🌱 Silkscreen — crisp, tidy, geometric pixel face</p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+
+    <div class="card f-jersey">
+      <p class="eyebrow">🌱 Jersey 10 — rounded, soft, gentle bitmap</p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+
+    <div class="card f-handjet">
+      <p class="eyebrow">🌱 Handjet — dotted, characterful, gentle pixels</p>
+      <p class="note">Whatever today holds, I'm proud of you. Toast counts. Soup counts. Anything warm counts. Look how far you've come, Christopher. — K</p>
+      <p class="small-line">Today · 3 things grew</p>
+    </div>
+  </div>
+</body>
+</html>

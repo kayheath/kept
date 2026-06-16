@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Earthy Green Dark Themes (Round 2)</title>
+<style>
+/* ============================================================
+   KEPT — Color Themes, Round 2
+   Calming offline desktop todo app. Earthy-green-forward.
+   All themes live in the "Slate & Sage" family, pushed greener
+   and more earthen. Anchored on the winning prior theme:
+     base #181D1F, sage accent #93B89A.
+   Plant sprite palette informs the warm secondaries:
+     terracotta/clay  ~ #B5651D / #9C5A33 / #C8794A
+     foliage greens   ~ leaf, sage, olive, blue-green succulent
+                        #6FA38C / #4E7A63
+     bloom accents    ~ dusty pink #D49AB0 / pale gold #E3C97A
+   HARD RULE: no red anywhere.
+   ============================================================ */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 Helvetica, Arial, sans-serif;
+    background: #0e1113;
+    color: #d8e0da;
+    line-height: 1.55;
+    padding: 48px 32px 96px;
+  }
+
+  .page-head {
+    max-width: 1180px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .page-head h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #e6efe7;
+  }
+  .page-head p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #8fa295;
+  }
+
+  .grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    gap: 36px;
+  }
+
+  /* ---- generic theme card scaffold (per-theme vars override) ---- */
+  .theme {
+    border-radius: 18px;
+    padding: 26px 26px 30px;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+    background: var(--base);
+    color: var(--text);
+  }
+
+  .theme-head { margin-bottom: 20px; }
+  .theme-head h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: var(--text);
+  }
+  .theme-head .register {
+    margin-top: 4px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* ---- token chips ---- */
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 9px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .swatch {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    flex: 0 0 26px;
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  .chip-label { display: flex; flex-direction: column; line-height: 1.25; }
+  .chip-role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+  }
+  .chip-hex {
+    font-size: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--text);
+  }
+
+  /* ---- UI snippet (home screen fragment) ---- */
+  .snippet {
+    background: var(--base);
+    border-radius: 14px;
+    padding: 22px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .snippet .eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .focus-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px 20px 22px;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-left: 3px solid var(--growth);
+  }
+  .focus-card .focus-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--growth);
+    margin-bottom: 8px;
+  }
+  .focus-card .task {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .focus-card .breath {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  /* ---- partner note: visually SET APART ---- */
+  .note {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--note-bg);
+    border: 1px dashed var(--note);
+    font-family: "Segoe Script", "Snell Roundhand", "Bradley Hand", cursive;
+    font-size: 15px;
+    color: var(--note);
+    font-style: italic;
+  }
+  .note .sign { display: block; margin-top: 6px; text-align: right; font-size: 13px; }
+
+  /* ---- pixel garden done-pile ---- */
+  .garden {
+    margin-top: 20px;
+  }
+  .garden .garden-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .pots {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  .pot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* CSS pixel plant: a grid of blocks above a terracotta pot */
+  .sprout {
+    display: grid;
+    grid-template-columns: repeat(5, 6px);
+    grid-template-rows: repeat(5, 6px);
+    gap: 1px;
+    margin-bottom: 3px;
+  }
+  .sprout span { width: 6px; height: 6px; border-radius: 1px; }
+  .leaf { background: var(--growth); }
+  .leaf-2 { background: var(--growth-2, var(--growth)); }
+  .bloom { background: var(--bloom); box-shadow: 0 0 6px var(--bloom); }
+  .stem { background: var(--growth-2, var(--growth)); }
+  .empty { background: transparent; }
+  .pot-body {
+    width: 34px; height: 20px;
+    background: var(--earth);
+    border-radius: 2px 2px 5px 5px;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,0.18);
+  }
+  .pot-rim {
+    width: 40px; height: 7px;
+    background: var(--earth-2, var(--earth));
+    border-radius: 3px;
+    margin-bottom: -1px;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.08);
+  }
+  .pot.budding .pot-rim, .pot.budding .pot-body { filter: brightness(1.05); }
+  .pot .emoji { font-size: 26px; line-height: 1; margin-bottom: 2px; }
+  .done-row {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .done-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bloom);
+    box-shadow: 0 0 8px var(--bloom);
+  }
+  .grew {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--growth);
+  }
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <h1>Kept — Earthy Green Dark Themes</h1>
+    <p>Round 2 · Grounded slate &amp; sage, pushed greener and more earthen · Celebrate done, one calm thing at a time</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- ============================================================
+         1. SLATE & SAGE (refined)
+         base    #181D1F   surface #232B2C
+         text    #DDE6DE   muted   #8C9E92
+         growth  #93B89A   growth2 #6FA38C
+         earth   #9C5A33   earth2  #B5651D
+         note    #D49AB0 (dusty pink)
+         bloom   #E3C97A (pale gold)
+         The original winner, cleaned: cool slate base, calm sage
+         growth, a quiet clay accent. The baseline everything orbits.
+         ============================================================ -->
+    <section class="theme" style="
+      --base:#181D1F; --surface:#232B2C; --text:#DDE6DE; --muted:#8C9E92;
+      --growth:#93B89A; --growth-2:#6FA38C; --earth:#9C5A33; --earth-2:#B5651D;
+      --note:#D49AB0; --note-bg:rgba(212,154,176,0.08); --bloom:#E3C97A;">
+      <div class="theme-head">
+        <h2>Slate &amp; Sage</h2>
+        <div class="register">The exhale you already know — grounded, quiet, a little greener now.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="swatch" style="background:#181D1F"></span><span class="chip-label"><span class="chip-role">Background base</span><span class="chip-hex">#181D1F</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#232B2C"></span><span class="chip-label"><span class="chip-role">Raised surface</span><span class="chip-hex">#232B2C</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#DDE6DE"></span><span class="chip-label"><span class="chip-role">Primary text</span><span class="chip-hex">#DDE6DE</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#8C9E92"></span><span class="chip-label"><span class="chip-role">Muted text</span><span class="chip-hex">#8C9E92</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#93B89A"></span><span class="chip-label"><span class="chip-role">Growth accent</span><span class="chip-hex">#93B89A</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#9C5A33"></span><span class="chip-label"><span class="chip-role">Earth / terracotta</span><span class="chip-hex">#9C5A33</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#D49AB0"></span><span class="chip-label"><span class="chip-role">Partner's voice</span><span class="chip-hex">#D49AB0</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E3C97A"></span><span class="chip-label"><span class="chip-role">Completion bloom</span><span class="chip-hex">#E3C97A</span></span></div>
+      </div>
+      <div class="snippet">
+        <div class="eyebrow">Today</div>
+        <div class="focus-card">
+          <div class="focus-label">One calm thing</div>
+          <div class="task">Read one chapter for seminar</div>
+          <div class="breath">No rush. It'll be here when you're ready.</div>
+        </div>
+        <div class="note">Whatever today holds, I'm proud of you.<span class="sign">— K</span></div>
+        <div class="garden">
+          <div class="garden-label">Things you've grown</div>
+          <div class="pots">
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="leaf"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="leaf"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot budding"><div class="emoji">🌱</div><div class="pot-rim"></div><div class="pot-body"></div></div>
+          </div>
+          <div class="grew">A new sprout opened when you finished "Make tea". 🌿</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         2. CLAY HEARTH (warmer green + terracotta)
+         base    #1C1A16   surface #2A2620
+         text    #E7DECF   muted   #A2937D
+         growth  #8FB287   growth2 #6E9468
+         earth   #B5651D   earth2  #C8794A
+         note    #D8A4B6 (dusty pink, warm-lifted)
+         bloom   #E8CE84 (pale gold)
+         Slate warmed to earthenware — browner base, the clay pots
+         glow, sage warms toward leaf-green. Like a lit kiln at dusk.
+         ============================================================ -->
+    <section class="theme" style="
+      --base:#1C1A16; --surface:#2A2620; --text:#E7DECF; --muted:#A2937D;
+      --growth:#8FB287; --growth-2:#6E9468; --earth:#B5651D; --earth-2:#C8794A;
+      --note:#D8A4B6; --note-bg:rgba(216,164,182,0.09); --bloom:#E8CE84;">
+      <div class="theme-head">
+        <h2>Clay Hearth</h2>
+        <div class="register">Warm earthenware and a banked fire — green that's been sitting in the sun.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="swatch" style="background:#1C1A16"></span><span class="chip-label"><span class="chip-role">Background base</span><span class="chip-hex">#1C1A16</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#2A2620"></span><span class="chip-label"><span class="chip-role">Raised surface</span><span class="chip-hex">#2A2620</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E7DECF"></span><span class="chip-label"><span class="chip-role">Primary text</span><span class="chip-hex">#E7DECF</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#A2937D"></span><span class="chip-label"><span class="chip-role">Muted text</span><span class="chip-hex">#A2937D</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#8FB287"></span><span class="chip-label"><span class="chip-role">Growth accent</span><span class="chip-hex">#8FB287</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#B5651D"></span><span class="chip-label"><span class="chip-role">Earth / terracotta</span><span class="chip-hex">#B5651D</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#D8A4B6"></span><span class="chip-label"><span class="chip-role">Partner's voice</span><span class="chip-hex">#D8A4B6</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E8CE84"></span><span class="chip-label"><span class="chip-role">Completion bloom</span><span class="chip-hex">#E8CE84</span></span></div>
+      </div>
+      <div class="snippet">
+        <div class="eyebrow">Today</div>
+        <div class="focus-card">
+          <div class="focus-label">One calm thing</div>
+          <div class="task">Go to the gym</div>
+          <div class="breath">Just the walk there counts. Start small.</div>
+        </div>
+        <div class="note">You don't have to do it all — just the next small thing.<span class="sign">— K</span></div>
+        <div class="garden">
+          <div class="garden-label">Things you've grown</div>
+          <div class="pots">
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span>
+                <span class="empty"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="bloom"></span><span class="leaf"></span><span class="bloom"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot budding"><div class="emoji">🪴</div><div class="pot-rim"></div><div class="pot-body"></div></div>
+          </div>
+          <div class="grew">A bloom opened when you finished "Water the plants". 🌼</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3. DEEP MOSS (richer, darker forest greens)
+         base    #131A15   surface #1E2A20
+         text    #D6E2D6   muted   #7F9482
+         growth  #6FA38C   growth2 #4E7A63   (blue-green succulent tones)
+         earth   #8A552F   earth2  #A6663A
+         note    #CE96AB (dusty pink)
+         bloom   #DFC477 (pale gold)
+         The base itself is green-black; growth leans toward the
+         deep blue-green aloe/succulent end. Forest floor at night.
+         ============================================================ -->
+    <section class="theme" style="
+      --base:#131A15; --surface:#1E2A20; --text:#D6E2D6; --muted:#7F9482;
+      --growth:#6FA38C; --growth-2:#4E7A63; --earth:#8A552F; --earth-2:#A6663A;
+      --note:#CE96AB; --note-bg:rgba(206,150,171,0.08); --bloom:#DFC477;">
+      <div class="theme-head">
+        <h2>Deep Moss</h2>
+        <div class="register">Forest floor after dark — deep, rooted, the green you sink into.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="swatch" style="background:#131A15"></span><span class="chip-label"><span class="chip-role">Background base</span><span class="chip-hex">#131A15</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#1E2A20"></span><span class="chip-label"><span class="chip-role">Raised surface</span><span class="chip-hex">#1E2A20</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#D6E2D6"></span><span class="chip-label"><span class="chip-role">Primary text</span><span class="chip-hex">#D6E2D6</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#7F9482"></span><span class="chip-label"><span class="chip-role">Muted text</span><span class="chip-hex">#7F9482</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#6FA38C"></span><span class="chip-label"><span class="chip-role">Growth accent</span><span class="chip-hex">#6FA38C</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#8A552F"></span><span class="chip-label"><span class="chip-role">Earth / terracotta</span><span class="chip-hex">#8A552F</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#CE96AB"></span><span class="chip-label"><span class="chip-role">Partner's voice</span><span class="chip-hex">#CE96AB</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#DFC477"></span><span class="chip-label"><span class="chip-role">Completion bloom</span><span class="chip-hex">#DFC477</span></span></div>
+      </div>
+      <div class="snippet">
+        <div class="eyebrow">Tonight</div>
+        <div class="focus-card">
+          <div class="focus-label">One calm thing</div>
+          <div class="task">Reply to Dad's message</div>
+          <div class="breath">A few words is plenty. He'll be glad to hear from you.</div>
+        </div>
+        <div class="note">However tonight goes, you're still doing beautifully.<span class="sign">— K</span></div>
+        <div class="garden">
+          <div class="garden-label">Things you've grown</div>
+          <div class="pots">
+            <div class="pot">
+              <div class="sprout">
+                <span class="leaf"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="leaf"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="leaf-2"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="leaf-2"></span>
+                <span class="empty"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot budding"><div class="emoji">🌿</div><div class="pot-rim"></div><div class="pot-body"></div></div>
+          </div>
+          <div class="grew">The moss spread a little when you finished "Take a shower". 🌿</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4. SAGE TWILIGHT (muted, dustier sage-grey)
+         base    #1A1E1D   surface #262C2B
+         text    #DBE1DD   muted   #909B95
+         growth  #A6C2AC   growth2 #88A892   (soft, desaturated sage)
+         earth   #9E6B4A   earth2  #B07E5C   (dusty, muted clay)
+         note    #D6A8B5 (soft dusty rose)
+         bloom   #DDCD96 (pale, chalky gold)
+         Everything one step toward grey and fog — the softest,
+         lowest-contrast option. Sage seen through evening haze.
+         ============================================================ -->
+    <section class="theme" style="
+      --base:#1A1E1D; --surface:#262C2B; --text:#DBE1DD; --muted:#909B95;
+      --growth:#A6C2AC; --growth-2:#88A892; --earth:#9E6B4A; --earth-2:#B07E5C;
+      --note:#D6A8B5; --note-bg:rgba(214,168,181,0.08); --bloom:#DDCD96;">
+      <div class="theme-head">
+        <h2>Sage Twilight</h2>
+        <div class="register">Sage seen through evening fog — soft, muted, low and slow.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="swatch" style="background:#1A1E1D"></span><span class="chip-label"><span class="chip-role">Background base</span><span class="chip-hex">#1A1E1D</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#262C2B"></span><span class="chip-label"><span class="chip-role">Raised surface</span><span class="chip-hex">#262C2B</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#DBE1DD"></span><span class="chip-label"><span class="chip-role">Primary text</span><span class="chip-hex">#DBE1DD</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#909B95"></span><span class="chip-label"><span class="chip-role">Muted text</span><span class="chip-hex">#909B95</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#A6C2AC"></span><span class="chip-label"><span class="chip-role">Growth accent</span><span class="chip-hex">#A6C2AC</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#9E6B4A"></span><span class="chip-label"><span class="chip-role">Earth / terracotta</span><span class="chip-hex">#9E6B4A</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#D6A8B5"></span><span class="chip-label"><span class="chip-role">Partner's voice</span><span class="chip-hex">#D6A8B5</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#DDCD96"></span><span class="chip-label"><span class="chip-role">Completion bloom</span><span class="chip-hex">#DDCD96</span></span></div>
+      </div>
+      <div class="snippet">
+        <div class="eyebrow">This evening</div>
+        <div class="focus-card">
+          <div class="focus-label">One calm thing</div>
+          <div class="task">Tidy the desk for five minutes</div>
+          <div class="breath">Five minutes, then you're done. That's the whole task.</div>
+        </div>
+        <div class="note">Resting is allowed. You've already done enough today.<span class="sign">— K</span></div>
+        <div class="garden">
+          <div class="garden-label">Things you've grown</div>
+          <div class="pots">
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="leaf"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf-2"></span><span class="leaf"></span><span class="leaf-2"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="leaf"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="leaf"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot budding"><div class="emoji">🌱</div><div class="pot-rim"></div><div class="pot-body"></div></div>
+          </div>
+          <div class="grew">Something quiet took root when you finished "Eat lunch". 🌿</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. CANDLELIT SAGE (sage greens + warm pale-gold light)
+         base    #16191A   surface #232A28
+         text    #E4E5D8   muted   #9AA08C
+         growth  #9DBE9A   growth2 #7BA37F
+         earth   #AD6A38   earth2  #C2814C
+         note    #E0B27C   (warm gold — partner's voice as candleflame)
+         bloom   #E9D08A   (pale gold glow)
+         A cool sage base lifted everywhere by warm gold light —
+         as if a single candle is burning just off-screen. The
+         partner's voice IS the warm gold here, set apart by warmth.
+         ============================================================ -->
+    <section class="theme" style="
+      --base:#16191A; --surface:#232A28; --text:#E4E5D8; --muted:#9AA08C;
+      --growth:#9DBE9A; --growth-2:#7BA37F; --earth:#AD6A38; --earth-2:#C2814C;
+      --note:#E0B27C; --note-bg:rgba(224,178,124,0.10); --bloom:#E9D08A;">
+      <div class="theme-head">
+        <h2>Candlelit Sage</h2>
+        <div class="register">Cool sage warmed by one candle — green, but the light is golden.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="swatch" style="background:#16191A"></span><span class="chip-label"><span class="chip-role">Background base</span><span class="chip-hex">#16191A</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#232A28"></span><span class="chip-label"><span class="chip-role">Raised surface</span><span class="chip-hex">#232A28</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E4E5D8"></span><span class="chip-label"><span class="chip-role">Primary text</span><span class="chip-hex">#E4E5D8</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#9AA08C"></span><span class="chip-label"><span class="chip-role">Muted text</span><span class="chip-hex">#9AA08C</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#9DBE9A"></span><span class="chip-label"><span class="chip-role">Growth accent</span><span class="chip-hex">#9DBE9A</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#AD6A38"></span><span class="chip-label"><span class="chip-role">Earth / terracotta</span><span class="chip-hex">#AD6A38</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E0B27C"></span><span class="chip-label"><span class="chip-role">Partner's voice</span><span class="chip-hex">#E0B27C</span></span></div>
+        <div class="chip"><span class="swatch" style="background:#E9D08A"></span><span class="chip-label"><span class="chip-role">Completion bloom</span><span class="chip-hex">#E9D08A</span></span></div>
+      </div>
+      <div class="snippet">
+        <div class="eyebrow">Today</div>
+        <div class="focus-card">
+          <div class="focus-label">One calm thing</div>
+          <div class="task">Cook something warm for dinner</div>
+          <div class="breath">Toast counts. Soup counts. Anything warm counts.</div>
+        </div>
+        <div class="note">I left the porch light on for you. Take your time.<span class="sign">— K</span></div>
+        <div class="garden">
+          <div class="garden-label">Things you've grown</div>
+          <div class="pots">
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="leaf"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="leaf"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot">
+              <div class="sprout">
+                <span class="empty"></span><span class="bloom"></span><span class="empty"></span><span class="bloom"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf"></span><span class="leaf-2"></span><span class="leaf"></span><span class="empty"></span>
+                <span class="empty"></span><span class="leaf-2"></span><span class="stem"></span><span class="leaf-2"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+                <span class="empty"></span><span class="empty"></span><span class="stem"></span><span class="empty"></span><span class="empty"></span>
+              </div>
+              <div class="pot-rim"></div><div class="pot-body"></div>
+            </div>
+            <div class="pot budding"><div class="emoji">🪴</div><div class="pot-rim"></div><div class="pot-body"></div></div>
+          </div>
+          <div class="grew">A gold bloom lit up when you finished "Open the curtains". 🌼</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

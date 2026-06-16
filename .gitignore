@@ -1,0 +1,33 @@
+# Purchased pixel-art plant sprites — licensed from https://umoral.itch.io/plants2024
+# Do NOT commit: this is paid, licensed art. Re-download from itch.io if needed.
+imports/Plants.png
+imports/16x16_windows_brown.png
+imports/16x16_windows_orange.png
+**/imports/Plants.png
+**/imports/16x16_windows_brown.png
+**/imports/16x16_windows_orange.png
+**/imports/plant-sprite-sheet.png
+# Sprite frames extracted from the licensed sheets (derivative art — same license)
+**/.working/sprites/
+**/mockups/sprites/
+
+# All licensed source sprite sheets — never commit anything dropped into imports/
+imports/*
+**/imports/*
+
+# Sprite frames extracted at build/runtime from the licensed sheets (derivative art — same license)
+resources/plants/
+resources/windows/
+
+# Local-first SQLite database file (and its sidecars)
+*.db
+*.db-shm
+*.db-wal
+
+# --- electron-vite / Node scaffold defaults ---
+node_modules
+dist
+out
+.DS_Store
+.eslintcache
+*.log*

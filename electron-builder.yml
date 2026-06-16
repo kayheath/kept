@@ -1,0 +1,41 @@
+appId: com.kept.app
+productName: Kept
+directories:
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+asarUnpack:
+  - resources/**
+win:
+  executableName: kept
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  # No extendInfo usage descriptions: Kept is offline and uses no camera, mic,
+  # or Documents/Downloads access. The template defaults declared access the
+  # app never exercises — removed deliberately. Do not re-add.
+  notarize: false
+dmg:
+  artifactName: ${name}-${version}.${ext}
+linux:
+  target:
+    - AppImage
+    - snap
+    - deb
+  maintainer: Kayla Heath <kaylaheath2006@gmail.com>
+  category: Utility
+appImage:
+  artifactName: ${name}-${version}.${ext}
+npmRebuild: false
+# No `publish`/auto-update config: Kept is local-first with zero network access
+# (AC #5, NFR1/NFR2/FR31). The electron-builder template default pointed at a
+# remote update server — removed deliberately. Do not re-add an updater.

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Show me my day (gentle peek)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+
+  .stage{
+    position:relative;
+    padding:42px 60px 54px;
+    min-height:640px;
+  }
+
+  /* ---------- subtle checkerboard texture ---------- */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:
+      repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;
+    opacity:.18;
+    pointer-events:none;z-index:0;
+  }
+  /* ---------- dim scrim: opened gently, slightly dimmed vs home ---------- */
+  .scrim{
+    position:absolute;inset:0;
+    background:radial-gradient(900px 520px at 50% 30%, #00000033 0%, #00000077 100%);
+    pointer-events:none;z-index:1;
+  }
+  .stage > *{position:relative;}
+
+  /* ---------- back to calm ---------- */
+  .topbar{
+    position:relative;z-index:3;
+    display:flex;align-items:center;
+    margin-bottom:30px;
+  }
+  .back{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;letter-spacing:1px;font-weight:500;
+    color:var(--text);
+    background:linear-gradient(var(--surface-2),#222a26);
+    border:3px solid #0e1011;
+    padding:10px 18px;
+    display:inline-flex;align-items:center;gap:9px;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      5px 5px 0 #000000bb;
+    cursor:default;
+  }
+  .back .arrow{color:var(--growth);font-size:17px;}
+
+  /* ---------- header ---------- */
+  .peek-head{
+    position:relative;z-index:3;
+    text-align:center;
+    margin:2px 0 30px;
+  }
+  .peek-head .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:6px;
+    font-size:20px;
+    font-weight:600;
+    color:var(--gold);
+    margin:0 0 12px;
+    text-shadow:2px 2px 0 #00000077;
+  }
+  .peek-head .reassure{
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--muted);
+    margin:0;
+    letter-spacing:.3px;
+  }
+
+  /* ---------- buckets row ---------- */
+  .buckets{
+    position:relative;z-index:3;
+    display:flex;
+    gap:26px;
+    align-items:flex-start;
+    justify-content:center;
+  }
+  .bucket{
+    flex:1;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      inset 0 0 0 3px #2c352f,
+      8px 8px 0 0 #000000bb;
+    padding:22px 20px 24px;
+    position:relative;
+  }
+  /* little lit corner tab, matching home focus-card */
+  .bucket::before{
+    content:"";position:absolute;top:3px;left:3px;width:24px;height:6px;
+    background:#33403a;
+  }
+  .bucket .bhead{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:600;
+    font-size:22px;
+    letter-spacing:2px;
+    margin:0 0 18px;
+    display:flex;align-items:center;gap:9px;
+  }
+  .bucket.now   .bhead{color:var(--growth);}
+  .bucket.next  .bhead{color:var(--gold);}
+  .bucket.later .bhead{color:var(--muted);}
+  /* tiny pixel marker block before bucket name */
+  .bmark{width:12px;height:12px;display:inline-block;image-rendering:pixelated;box-shadow:2px 2px 0 #00000055;}
+  .bucket.now   .bmark{background:var(--growth);}
+  .bucket.next  .bmark{background:var(--gold);}
+  .bucket.later .bmark{background:var(--growth-deep);}
+
+  .item{
+    font-family:'Pixelify Sans',monospace;
+    font-size:18px;
+    line-height:1.4;
+    color:var(--text);
+    letter-spacing:.3px;
+    padding:11px 0;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    border-top:2px solid #1c221f;
+  }
+  .item:first-of-type{border-top:none;}
+  /* calm pixel bullet — no checkbox, nothing to shame */
+  .item .dotmk{
+    flex:none;
+    width:8px;height:8px;margin-top:7px;
+    background:var(--growth-deep);
+    image-rendering:pixelated;
+    box-shadow:2px 2px 0 #00000044;
+  }
+  .item .txt{flex:1;}
+
+  /* ---------- quiet deadline tag — muted, calm, NON-RED safety net ---------- */
+  .deadline{
+    display:inline-block;
+    margin-top:6px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    color:var(--muted);
+    background:#1d2320;
+    border:2px solid #313a35;
+    padding:3px 9px;
+    box-shadow:2px 2px 0 #00000055;
+  }
+  .deadline .pin{color:var(--gold);}
+
+  /* ---------- ambient plant resting at base of LATER (world consistency) ---------- */
+  .later-foot{
+    margin-top:14px;
+    display:flex;justify-content:flex-end;
+  }
+  .later-foot img{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    width:42px;height:auto;
+    filter:drop-shadow(3px 3px 0 #00000055);
+    opacity:.85;
+  }
+
+  /* ---------- footer line ---------- */
+  .vault-note{
+    position:relative;z-index:3;
+    margin:38px auto 0;
+    max-width:560px;
+    text-align:center;
+  }
+  .vault-note p{
+    font-family:'Pixelify Sans',monospace;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+    margin:0;
+    letter-spacing:.4px;
+  }
+  .vault-note .leaf{color:var(--growth);}
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+    </div>
+    <div class="stage">
+      <div class="bg-checker"></div>
+      <!-- dim scrim: this view opened gently, a soft dimmed expansion of the calm -->
+      <div class="scrim"></div>
+
+      <!-- calm, obvious way back -->
+      <div class="topbar">
+        <span class="back"><span class="arrow">&larr;</span> back to calm</span>
+      </div>
+
+      <!-- gentle header -->
+      <div class="peek-head">
+        <p class="eyebrow">TODAY, GENTLY</p>
+        <p class="reassure">Just today. The rest is safe in the vault.</p>
+      </div>
+
+      <!-- three small gentle buckets, today-scoped only -->
+      <div class="buckets">
+
+        <div class="bucket now">
+          <p class="bhead"><span class="bmark"></span> NOW</p>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Read one chapter for seminar</span>
+          </div>
+        </div>
+
+        <div class="bucket next">
+          <p class="bhead"><span class="bmark"></span> NEXT</p>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Reply to Prof. Lin's email</span>
+          </div>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Water the pothos</span>
+          </div>
+        </div>
+
+        <div class="bucket later">
+          <p class="bhead"><span class="bmark"></span> LATER</p>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">
+              Outline the methods section
+              <span class="deadline"><span class="pin">›</span> paper due Fri</span>
+            </span>
+          </div>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Pick up groceries</span>
+          </div>
+          <!-- small ambient sprout for world consistency -->
+          <div class="later-foot">
+            <img src="./sprites/plant1_sprout.png" alt="potted sprout">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="vault-note">
+        <p>Today's do-dates are here. <span class="leaf">&hearts;</span> Deadlines are held quietly &mdash; nothing is asking for you all at once.</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

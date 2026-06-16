@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kept — Warm-Dark Color Themes</title>
+<!--
+  ============================================================
+  KEPT — Color Theme Explorations (all DARK, warm/cozy family)
+  5 distinct cozy-dark moods. NO RED anywhere.
+  Hex values documented per-variation below for lifting.
+  System font stack, inline CSS, no JS, no network.
+  ============================================================
+
+  THEME 1 — "Hearthclay" (warm terracotta / clay dark)
+    --bg-base:    #211613   deep cooked-clay brown
+    --bg-raised:  #2f201b   raised earthen surface
+    --text:       #f1e0d2   warm bone
+    --muted:      #ad8f7e   dusty clay-mute
+    --accent:     #8fae6f   pothos green (growth)
+    --partner:    #e6a25c   warm candle-amber (her voice)
+    --glow:       #d9b27c   soft kiln glow (completion)
+
+  THEME 2 — "Mossbank" (mossy forest-green dark)
+    --bg-base:    #14201a   deep pine-shadow
+    --bg-raised:  #1d2c24   raised moss-bed
+    --text:       #e3ead9   pale birch
+    --muted:      #82967f   lichen grey-green
+    --accent:     #9fc27a   fresh fern (growth)
+    --partner:    #e7b070   lantern wheat (her voice)
+    --glow:       #c4d99a   dew-on-leaf glow (completion)
+
+  THEME 3 — "Duskmallow" (dusty lavender-twilight dark)
+    --bg-base:    #1d1822   deep twilight plum
+    --bg-raised:  #29222f   raised dusk surface
+    --text:       #ece3ef   soft moonlit lilac-white
+    --muted:      #a094a8   faded heather
+    --accent:     #94b88f   sage-in-shadow (growth)
+    --partner:    #d9a6c6   dusty rose-mauve (her voice)
+    --glow:       #c9b3df   amethyst glow (completion)
+
+  THEME 4 — "Candlewax" (candlelit amber / sepia dark)
+    --bg-base:    #1f1812   deep tallow-dark
+    --bg-raised:  #2c2218   raised sepia surface
+    --text:       #f3e6cf   warm parchment
+    --muted:      #b39a76   aged-paper mute
+    --accent:     #a3b277   olive-leaf green (growth)
+    --partner:    #f0b15e   bright beeswax flame (her voice)
+    --glow:       #e8c987   candle-halo glow (completion)
+
+  THEME 5 — "Slate & Sage" (deep slate with sage dark)
+    --bg-base:    #181d1f   deep wet-stone slate
+    --bg-raised:  #232b2d   raised slate surface
+    --text:       #e4e9e6   cool fog-white
+    --muted:      #8a9794   muted river-stone
+    --accent:     #93b89a   soft sage (growth)
+    --partner:    #d6b079   warm driftwood-amber (her voice)
+    --glow:       #b6d2bb   morning-mist glow (completion)
+  ============================================================
+-->
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #0d0a09;
+    color: #e8ddd2;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  .page > header {
+    margin-bottom: 8px;
+  }
+  .page > header h1 {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0 0 6px;
+    color: #f1e6d8;
+  }
+  .page > header p {
+    margin: 0;
+    color: #8c7f73;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 720px;
+  }
+  .intro-rule {
+    height: 1px;
+    background: linear-gradient(to right, #3a322c, transparent);
+    margin: 26px 0 40px;
+    border: 0;
+  }
+
+  /* ---- theme card layout ---- */
+  .theme {
+    border-radius: 18px;
+    padding: 26px 26px 30px;
+    margin-bottom: 34px;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 18px 40px -22px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  .theme-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .theme-head h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.3px;
+  }
+  .theme-head .tag {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    opacity: 0.85;
+  }
+  .register {
+    font-size: 14.5px;
+    font-style: italic;
+    margin: 0 0 22px;
+    line-height: 1.55;
+  }
+
+  .theme-body {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .theme-body { grid-template-columns: 1fr; }
+  }
+
+  /* ---- token chips ---- */
+  .chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .chip {
+    border-radius: 11px;
+    padding: 12px 13px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .chip .swatch {
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  .chip .role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    opacity: 0.75;
+    line-height: 1.3;
+  }
+  .chip .hex {
+    font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    opacity: 0.9;
+  }
+
+  /* ---- UI snippet ---- */
+  .snippet {
+    border-radius: 14px;
+    padding: 24px 24px 26px;
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .snippet .kicker {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    margin: 0 0 18px;
+  }
+  .snippet .focus-label {
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px;
+  }
+  .snippet .task {
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0 0 22px;
+  }
+  .snippet .task .checkbox {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 2px solid currentColor;
+    vertical-align: -3px;
+    margin-right: 10px;
+    opacity: 0.6;
+  }
+
+  /* garden / done-pile */
+  .garden-wrap {
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    margin: 0 0 22px;
+  }
+  .garden-wrap .garden-label {
+    font-size: 11.5px;
+    letter-spacing: 0.6px;
+    margin: 0 0 12px;
+  }
+  .garden {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    height: 64px;
+  }
+  .plant {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 3px;
+    align-items: center;
+  }
+  .px {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+  }
+  .stem { opacity: 0.85; }
+  .seedling {
+    font-size: 18px;
+    line-height: 1;
+    filter: saturate(0.85);
+  }
+
+  /* partner note */
+  .note {
+    border-radius: 12px;
+    padding: 15px 17px;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .note::before {
+    content: "♡";
+    font-style: normal;
+    margin-right: 8px;
+    opacity: 0.85;
+  }
+  .note .sig {
+    display: block;
+    font-style: normal;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Kept — warm-dark theme explorations</h1>
+    <p>Five distinct cozy-dark moods for a calming, offline desktop todo app. All dark, all warm — exhale-when-you-open-it. No red, no badges, no counts. Done is a growing pixel garden. Themes 1 and 3 show a day→night dim shift to illustrate tone.</p>
+  </header>
+  <hr class="intro-rule">
+
+  <!-- ============ THEME 1 — HEARTHCLAY ============ -->
+  <section class="theme" style="background:#211613;">
+    <div class="theme-head">
+      <h2 style="color:#f1e0d2;">1 · Hearthclay</h2>
+      <span class="tag" style="background:#3a2820;color:#e6a25c;">terracotta · clay dark</span>
+    </div>
+    <p class="register" style="color:#ad8f7e;">Like sitting near a low fire in a clay-walled room — warm-bellied and unhurried.</p>
+
+    <div class="theme-body">
+      <div class="chips">
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#211613;"></div><span class="role" style="color:#ad8f7e;">Background · base</span><span class="hex" style="color:#f1e0d2;">#211613</span></div>
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#2f201b;"></div><span class="role" style="color:#ad8f7e;">Surface · raised</span><span class="hex" style="color:#f1e0d2;">#2F201B</span></div>
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#f1e0d2;"></div><span class="role" style="color:#ad8f7e;">Text · primary</span><span class="hex" style="color:#f1e0d2;">#F1E0D2</span></div>
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#ad8f7e;"></div><span class="role" style="color:#ad8f7e;">Text · muted</span><span class="hex" style="color:#f1e0d2;">#AD8F7E</span></div>
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#8fae6f;"></div><span class="role" style="color:#ad8f7e;">Accent · growth</span><span class="hex" style="color:#f1e0d2;">#8FAE6F</span></div>
+        <div class="chip" style="background:#2f201b;"><div class="swatch" style="background:#e6a25c;"></div><span class="role" style="color:#ad8f7e;">Partner's voice</span><span class="hex" style="color:#f1e0d2;">#E6A25C</span></div>
+        <div class="chip" style="background:#2f201b;grid-column:span 2;"><div class="swatch" style="background:#d9b27c;"></div><span class="role" style="color:#ad8f7e;">Completion glow</span><span class="hex" style="color:#f1e0d2;">#D9B27C</span></div>
+      </div>
+
+      <div class="snippet" style="background:#2a1d18;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);">
+        <p class="kicker" style="color:#ad8f7e;">Today · day tone</p>
+        <p class="focus-label" style="color:#ad8f7e;">One calm thing</p>
+        <p class="task" style="color:#f1e0d2;"><span class="checkbox" style="color:#8fae6f;"></span>Read one chapter for seminar</p>
+
+        <div class="garden-wrap" style="background:#241a15;">
+          <p class="garden-label" style="color:#ad8f7e;">What you've grown today</p>
+          <div class="garden">
+            <div class="plant"><span class="seedling">🌱</span></div>
+            <div class="plant"><div class="px stem" style="background:#8fae6f;"></div><div class="px" style="background:#a7c389;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#8fae6f;"></div><div class="px stem" style="background:#8fae6f;"></div><div class="px" style="background:#a7c389;"></div><div class="px" style="background:#d9b27c;"></div></div>
+            <div class="plant"><span class="seedling">🌿</span></div>
+            <div class="plant"><div class="px stem" style="background:#8fae6f;"></div><div class="px stem" style="background:#8fae6f;"></div><div class="px stem" style="background:#8fae6f;"></div><div class="px" style="background:#a7c389;"></div></div>
+          </div>
+        </div>
+
+        <div class="note" style="background:#33231a;color:#e6a25c;border:1px solid rgba(230,162,92,0.22);">
+          Whatever today holds, I'm proud of you.
+          <span class="sig">— K</span>
+        </div>
+
+        <!-- night dim variant -->
+        <div style="margin-top:20px;border-radius:12px;background:#1a1210;padding:16px;border:1px solid rgba(255,255,255,0.04);">
+          <p class="kicker" style="color:#8c7264;margin-bottom:12px;">Same screen · night tone (dimmed)</p>
+          <p class="task" style="color:#d8c6b8;font-size:18px;margin:0;"><span class="checkbox" style="color:#6f8a55;"></span>Read one chapter for seminar</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THEME 2 — MOSSBANK ============ -->
+  <section class="theme" style="background:#14201a;">
+    <div class="theme-head">
+      <h2 style="color:#e3ead9;">2 · Mossbank</h2>
+      <span class="tag" style="background:#22332a;color:#9fc27a;">mossy · forest-green dark</span>
+    </div>
+    <p class="register" style="color:#82967f;">A shaded riverbank at dusk — soft, green, and breathing slow.</p>
+
+    <div class="theme-body">
+      <div class="chips">
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#14201a;"></div><span class="role" style="color:#82967f;">Background · base</span><span class="hex" style="color:#e3ead9;">#14201A</span></div>
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#1d2c24;"></div><span class="role" style="color:#82967f;">Surface · raised</span><span class="hex" style="color:#e3ead9;">#1D2C24</span></div>
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#e3ead9;"></div><span class="role" style="color:#82967f;">Text · primary</span><span class="hex" style="color:#e3ead9;">#E3EAD9</span></div>
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#82967f;"></div><span class="role" style="color:#82967f;">Text · muted</span><span class="hex" style="color:#e3ead9;">#82967F</span></div>
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#9fc27a;"></div><span class="role" style="color:#82967f;">Accent · growth</span><span class="hex" style="color:#e3ead9;">#9FC27A</span></div>
+        <div class="chip" style="background:#1d2c24;"><div class="swatch" style="background:#e7b070;"></div><span class="role" style="color:#82967f;">Partner's voice</span><span class="hex" style="color:#e3ead9;">#E7B070</span></div>
+        <div class="chip" style="background:#1d2c24;grid-column:span 2;"><div class="swatch" style="background:#c4d99a;"></div><span class="role" style="color:#82967f;">Completion glow</span><span class="hex" style="color:#e3ead9;">#C4D99A</span></div>
+      </div>
+
+      <div class="snippet" style="background:#192720;">
+        <p class="kicker" style="color:#82967f;">Today</p>
+        <p class="focus-label" style="color:#82967f;">One calm thing</p>
+        <p class="task" style="color:#e3ead9;"><span class="checkbox" style="color:#9fc27a;"></span>Water the plants by the window</p>
+
+        <div class="garden-wrap" style="background:#15211b;">
+          <p class="garden-label" style="color:#82967f;">What you've grown today</p>
+          <div class="garden">
+            <div class="plant"><span class="seedling">🌱</span></div>
+            <div class="plant"><div class="px stem" style="background:#9fc27a;"></div><div class="px" style="background:#c4d99a;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#9fc27a;"></div><div class="px stem" style="background:#9fc27a;"></div><div class="px" style="background:#c4d99a;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#9fc27a;"></div><div class="px stem" style="background:#9fc27a;"></div><div class="px stem" style="background:#9fc27a;"></div><div class="px" style="background:#c4d99a;"></div><div class="px" style="background:#c4d99a;"></div></div>
+            <div class="plant"><span class="seedling">🌿</span></div>
+          </div>
+        </div>
+
+        <div class="note" style="background:#23362b;color:#e7b070;border:1px solid rgba(231,176,112,0.22);">
+          You don't have to do it all. Just the next small thing.
+          <span class="sig">— K</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THEME 3 — DUSKMALLOW ============ -->
+  <section class="theme" style="background:#1d1822;">
+    <div class="theme-head">
+      <h2 style="color:#ece3ef;">3 · Duskmallow</h2>
+      <span class="tag" style="background:#2e2536;color:#d9a6c6;">lavender · twilight dark</span>
+    </div>
+    <p class="register" style="color:#a094a8;">The violet hush right after sunset — gentle, a little dreamy, safe.</p>
+
+    <div class="theme-body">
+      <div class="chips">
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#1d1822;"></div><span class="role" style="color:#a094a8;">Background · base</span><span class="hex" style="color:#ece3ef;">#1D1822</span></div>
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#29222f;"></div><span class="role" style="color:#a094a8;">Surface · raised</span><span class="hex" style="color:#ece3ef;">#29222F</span></div>
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#ece3ef;"></div><span class="role" style="color:#a094a8;">Text · primary</span><span class="hex" style="color:#ece3ef;">#ECE3EF</span></div>
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#a094a8;"></div><span class="role" style="color:#a094a8;">Text · muted</span><span class="hex" style="color:#ece3ef;">#A094A8</span></div>
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#94b88f;"></div><span class="role" style="color:#a094a8;">Accent · growth</span><span class="hex" style="color:#ece3ef;">#94B88F</span></div>
+        <div class="chip" style="background:#29222f;"><div class="swatch" style="background:#d9a6c6;"></div><span class="role" style="color:#a094a8;">Partner's voice</span><span class="hex" style="color:#ece3ef;">#D9A6C6</span></div>
+        <div class="chip" style="background:#29222f;grid-column:span 2;"><div class="swatch" style="background:#c9b3df;"></div><span class="role" style="color:#a094a8;">Completion glow</span><span class="hex" style="color:#ece3ef;">#C9B3DF</span></div>
+      </div>
+
+      <div class="snippet" style="background:#241d2b;">
+        <p class="kicker" style="color:#a094a8;">Today · evening tone</p>
+        <p class="focus-label" style="color:#a094a8;">One calm thing</p>
+        <p class="task" style="color:#ece3ef;"><span class="checkbox" style="color:#94b88f;"></span>Write back to the seminar group</p>
+
+        <div class="garden-wrap" style="background:#1f1927;">
+          <p class="garden-label" style="color:#a094a8;">What you've grown today</p>
+          <div class="garden">
+            <div class="plant"><span class="seedling">🌱</span></div>
+            <div class="plant"><div class="px stem" style="background:#94b88f;"></div><div class="px" style="background:#aecaa9;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#94b88f;"></div><div class="px stem" style="background:#94b88f;"></div><div class="px" style="background:#c9b3df;"></div></div>
+            <div class="plant"><span class="seedling">🌿</span></div>
+            <div class="plant"><div class="px stem" style="background:#94b88f;"></div><div class="px stem" style="background:#94b88f;"></div><div class="px" style="background:#aecaa9;"></div><div class="px" style="background:#c9b3df;"></div></div>
+          </div>
+        </div>
+
+        <div class="note" style="background:#322638;color:#d9a6c6;border:1px solid rgba(217,166,198,0.24);">
+          Rest is also something you finished today.
+          <span class="sig">— K</span>
+        </div>
+
+        <!-- night dim variant -->
+        <div style="margin-top:20px;border-radius:12px;background:#17131d;padding:16px;border:1px solid rgba(255,255,255,0.04);">
+          <p class="kicker" style="color:#857a8d;margin-bottom:12px;">Same screen · late-night tone (dimmed)</p>
+          <p class="task" style="color:#cfc6d4;font-size:18px;margin:0;"><span class="checkbox" style="color:#7a9b76;"></span>Write back to the seminar group</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THEME 4 — CANDLEWAX ============ -->
+  <section class="theme" style="background:#1f1812;">
+    <div class="theme-head">
+      <h2 style="color:#f3e6cf;">4 · Candlewax</h2>
+      <span class="tag" style="background:#332618;color:#f0b15e;">candlelit · amber sepia dark</span>
+    </div>
+    <p class="register" style="color:#b39a76;">Reading by one flame on an old wooden desk — golden, soft-edged, intimate.</p>
+
+    <div class="theme-body">
+      <div class="chips">
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#1f1812;"></div><span class="role" style="color:#b39a76;">Background · base</span><span class="hex" style="color:#f3e6cf;">#1F1812</span></div>
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#2c2218;"></div><span class="role" style="color:#b39a76;">Surface · raised</span><span class="hex" style="color:#f3e6cf;">#2C2218</span></div>
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#f3e6cf;"></div><span class="role" style="color:#b39a76;">Text · primary</span><span class="hex" style="color:#f3e6cf;">#F3E6CF</span></div>
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#b39a76;"></div><span class="role" style="color:#b39a76;">Text · muted</span><span class="hex" style="color:#f3e6cf;">#B39A76</span></div>
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#a3b277;"></div><span class="role" style="color:#b39a76;">Accent · growth</span><span class="hex" style="color:#f3e6cf;">#A3B277</span></div>
+        <div class="chip" style="background:#2c2218;"><div class="swatch" style="background:#f0b15e;"></div><span class="role" style="color:#b39a76;">Partner's voice</span><span class="hex" style="color:#f3e6cf;">#F0B15E</span></div>
+        <div class="chip" style="background:#2c2218;grid-column:span 2;"><div class="swatch" style="background:#e8c987;"></div><span class="role" style="color:#b39a76;">Completion glow</span><span class="hex" style="color:#f3e6cf;">#E8C987</span></div>
+      </div>
+
+      <div class="snippet" style="background:#281f16;">
+        <p class="kicker" style="color:#b39a76;">Today</p>
+        <p class="focus-label" style="color:#b39a76;">One calm thing</p>
+        <p class="task" style="color:#f3e6cf;"><span class="checkbox" style="color:#a3b277;"></span>Make a cup of tea before you start</p>
+
+        <div class="garden-wrap" style="background:#221a12;">
+          <p class="garden-label" style="color:#b39a76;">What you've grown today</p>
+          <div class="garden">
+            <div class="plant"><span class="seedling">🌱</span></div>
+            <div class="plant"><div class="px stem" style="background:#a3b277;"></div><div class="px" style="background:#b9c690;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#a3b277;"></div><div class="px stem" style="background:#a3b277;"></div><div class="px" style="background:#e8c987;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#a3b277;"></div><div class="px stem" style="background:#a3b277;"></div><div class="px stem" style="background:#a3b277;"></div><div class="px" style="background:#b9c690;"></div><div class="px" style="background:#e8c987;"></div></div>
+            <div class="plant"><span class="seedling">🌿</span></div>
+          </div>
+        </div>
+
+        <div class="note" style="background:#37291a;color:#f0b15e;border:1px solid rgba(240,177,94,0.24);">
+          Take your time tonight. I'm here whenever you look up.
+          <span class="sig">— K</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THEME 5 — SLATE & SAGE ============ -->
+  <section class="theme" style="background:#181d1f;">
+    <div class="theme-head">
+      <h2 style="color:#e4e9e6;">5 · Slate &amp; Sage</h2>
+      <span class="tag" style="background:#283032;color:#93b89a;">deep slate · sage dark</span>
+    </div>
+    <p class="register" style="color:#8a9794;">Cool grey stone warmed by sage and driftwood — quiet, grounded, the calmest of the five.</p>
+
+    <div class="theme-body">
+      <div class="chips">
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#181d1f;"></div><span class="role" style="color:#8a9794;">Background · base</span><span class="hex" style="color:#e4e9e6;">#181D1F</span></div>
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#232b2d;"></div><span class="role" style="color:#8a9794;">Surface · raised</span><span class="hex" style="color:#e4e9e6;">#232B2D</span></div>
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#e4e9e6;"></div><span class="role" style="color:#8a9794;">Text · primary</span><span class="hex" style="color:#e4e9e6;">#E4E9E6</span></div>
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#8a9794;"></div><span class="role" style="color:#8a9794;">Text · muted</span><span class="hex" style="color:#e4e9e6;">#8A9794</span></div>
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#93b89a;"></div><span class="role" style="color:#8a9794;">Accent · growth</span><span class="hex" style="color:#e4e9e6;">#93B89A</span></div>
+        <div class="chip" style="background:#232b2d;"><div class="swatch" style="background:#d6b079;"></div><span class="role" style="color:#8a9794;">Partner's voice</span><span class="hex" style="color:#e4e9e6;">#D6B079</span></div>
+        <div class="chip" style="background:#232b2d;grid-column:span 2;"><div class="swatch" style="background:#b6d2bb;"></div><span class="role" style="color:#8a9794;">Completion glow</span><span class="hex" style="color:#e4e9e6;">#B6D2BB</span></div>
+      </div>
+
+      <div class="snippet" style="background:#1e2426;">
+        <p class="kicker" style="color:#8a9794;">Today</p>
+        <p class="focus-label" style="color:#8a9794;">One calm thing</p>
+        <p class="task" style="color:#e4e9e6;"><span class="checkbox" style="color:#93b89a;"></span>Reply to the one email you've been holding</p>
+
+        <div class="garden-wrap" style="background:#191f21;">
+          <p class="garden-label" style="color:#8a9794;">What you've grown today</p>
+          <div class="garden">
+            <div class="plant"><span class="seedling">🌱</span></div>
+            <div class="plant"><div class="px stem" style="background:#93b89a;"></div><div class="px" style="background:#b6d2bb;"></div></div>
+            <div class="plant"><div class="px stem" style="background:#93b89a;"></div><div class="px stem" style="background:#93b89a;"></div><div class="px" style="background:#b6d2bb;"></div></div>
+            <div class="plant"><span class="seedling">🌿</span></div>
+            <div class="plant"><div class="px stem" style="background:#93b89a;"></div><div class="px stem" style="background:#93b89a;"></div><div class="px stem" style="background:#93b89a;"></div><div class="px" style="background:#b6d2bb;"></div></div>
+          </div>
+        </div>
+
+        <div class="note" style="background:#2a3330;color:#d6b079;border:1px solid rgba(214,176,121,0.24);">
+          One thing done is enough to call it a good day.
+          <span class="sig">— K</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

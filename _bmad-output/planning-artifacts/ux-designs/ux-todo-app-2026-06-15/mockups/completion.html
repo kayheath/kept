@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — The Completion Bloom (real sprites)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+    --sky-day-top:#7FB0C9;
+    --sky-day-bot:#A9CBD6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+
+  .stage{
+    position:relative;
+    padding:44px 60px 0;
+    min-height:560px;
+  }
+
+  /* ---------- subtle checkerboard texture ---------- */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:
+      repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;
+    opacity:.18;
+    pointer-events:none;z-index:0;
+  }
+  .stage > *{position:relative;}
+
+  /* ---------- string lights ---------- */
+  .lights{
+    position:absolute;
+    top:24px;left:40px;
+    width:360px;height:36px;
+    pointer-events:none;z-index:1;
+  }
+  .lights .wire{
+    position:absolute;top:6px;left:0;right:0;height:3px;
+    background:repeating-linear-gradient(90deg,#3a443f 0 8px, transparent 8px 16px);
+    opacity:.55;
+  }
+  .bulb{
+    position:absolute;top:12px;width:8px;height:10px;
+    background:var(--bloom);
+    box-shadow:0 0 0 2px #00000033, 2px 2px 0 #00000044;
+  }
+
+  /* ---------- eyebrow ---------- */
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:5px;
+    font-size:16px;
+    color:var(--gold);
+    margin:18px 0 24px;
+    z-index:3;
+    text-shadow:2px 2px 0 #00000077;
+  }
+
+  /* ============================================================
+     THE DRIFTING TASK — the just-finished card lifting off and
+     descending toward the shelf/garden. Pushed lower, fading,
+     with a soft downward motion feel (trailing afterimages).
+     ============================================================ */
+  .drift-wrap{position:relative;z-index:3;max-width:640px;height:206px;}
+
+  /* faint afterimages above the card — the "trail" it left rising up,
+     reinforcing that the card has drifted DOWN from where it was */
+  .ghost{
+    position:absolute;left:0;right:0;
+    border:3px solid #0e1011;
+    background:var(--surface);
+    height:64px;
+    pointer-events:none;
+  }
+  .ghost.g1{top:-2px;  opacity:.10;transform:scale(.97);}
+  .ghost.g2{top:18px;  opacity:.18;transform:scale(.985);}
+
+  /* the focus card itself: lower in its wrap, semi-transparent, settling */
+  .focus-card{
+    position:absolute;
+    left:0;right:0;
+    top:54px;                 /* sits LOW — it has drifted down */
+    background:var(--surface);
+    color:var(--text);
+    padding:26px 32px 24px;
+    border:3px solid #0e1011;
+    opacity:.62;              /* fading as it releases */
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      inset 0 0 0 3px #2c352f,
+      4px 14px 0 0 #00000077;   /* shadow drops LOWER = descending */
+  }
+  .focus-card::before{
+    content:"";position:absolute;top:3px;left:3px;width:28px;height:6px;
+    background:#33403a;
+  }
+  .focus-eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;letter-spacing:2px;color:var(--muted);
+    display:flex;align-items:center;gap:9px;margin-bottom:14px;
+  }
+  /* pixel CHECK mark (soft, not clinical) in growth green */
+  .pix-check{
+    width:16px;height:14px;display:inline-block;position:relative;
+    image-rendering:pixelated;
+  }
+  .pix-check::before{content:"";position:absolute;left:1px;top:6px;width:5px;height:4px;background:var(--growth);}
+  .pix-check::after{content:"";position:absolute;left:5px;top:2px;width:9px;height:4px;background:var(--growth);transform:skewX(-8deg);}
+  .focus-task{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:500;
+    font-size:30px;
+    line-height:1.35;
+    margin:0 0 10px;
+    color:var(--text);
+    letter-spacing:.4px;
+    text-decoration:line-through;
+    text-decoration-color:var(--growth-deep);
+    text-decoration-thickness:3px;
+  }
+  .release{
+    font-family:'Pixelify Sans',monospace;
+    font-size:14px;
+    color:var(--growth);
+    margin:0;
+    letter-spacing:.4px;
+  }
+  /* descending motion chevrons under the card, pointing toward the shelf */
+  .descend{
+    position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2;
+  }
+  .descend span{
+    width:0;height:0;
+    border-left:8px solid transparent;border-right:8px solid transparent;
+    border-top:9px solid var(--growth-deep);
+    image-rendering:pixelated;
+  }
+  .descend span:nth-child(1){opacity:.7;}
+  .descend span:nth-child(2){opacity:.4;}
+  .descend span:nth-child(3){opacity:.18;}
+
+  /* ---------- shelf scene ---------- */
+  .shelf-scene{
+    position:relative;z-index:2;
+    margin-top:52px;
+    height:230px;
+  }
+  .pots{
+    position:absolute;
+    bottom:30px;left:0;right:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:34px;
+    padding:0 50px;
+    z-index:3;
+  }
+  .pots img{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    display:block;
+    height:auto;
+    filter:drop-shadow(3px 3px 0 #00000055);
+  }
+  .pots .p1{width:72px;}
+  .pots .p2{width:72px;}
+  .pots .p3{width:84px;}
+  .pots .p4{width:84px;}
+  .pots .p5{width:66px;}
+
+  /* ============================================================
+     THE NEW SPROUT — the garden just gained one. Soft pale-gold
+     BLOOM glow marks the moment of growth/arrival. Slightly scaled
+     up and lifted, "settling in" among the existing pots.
+     ============================================================ */
+  .new-sprout{
+    position:relative;
+    display:flex;flex-direction:column;align-items:center;
+    transform:translateY(-6px);   /* still settling onto the shelf */
+  }
+  .new-sprout img{
+    width:80px;                    /* a touch larger than p1 — the focal sprout */
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    display:block;height:auto;
+    position:relative;z-index:2;
+    /* soft pale-gold bloom halo around the new growth */
+    filter:
+      drop-shadow(0 0 14px #E9D08Acc)
+      drop-shadow(0 0 26px #E9D08A66)
+      drop-shadow(3px 3px 0 #00000055);
+  }
+  /* radial bloom glow behind the sprout */
+  .new-sprout::before{
+    content:"";position:absolute;
+    bottom:-6px;left:50%;transform:translateX(-50%);
+    width:150px;height:150px;
+    background:radial-gradient(circle at 50% 60%,
+      #E9D08A55 0%, #E9D08A2e 38%, transparent 70%);
+    z-index:1;pointer-events:none;
+  }
+  /* "+1" growth tag floating just above the new sprout */
+  .new-sprout .grew{
+    position:absolute;top:-26px;left:50%;transform:translateX(-50%);
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;font-weight:600;letter-spacing:1px;
+    color:var(--bloom);
+    text-shadow:2px 2px 0 #00000088;
+    white-space:nowrap;z-index:3;
+  }
+  /* tiny pixel sparkles around the bloom */
+  .spark{position:absolute;width:5px;height:5px;background:var(--bloom);z-index:3;
+    box-shadow:0 0 6px #E9D08A;image-rendering:pixelated;}
+  .spark.s-a{top:-2px;left:8px;}
+  .spark.s-b{top:14px;right:4px;width:4px;height:4px;}
+  .spark.s-c{top:46px;left:-2px;width:4px;height:4px;opacity:.8;}
+
+  /* wooden shelf with connected brackets */
+  .shelf{
+    position:absolute;
+    bottom:0;left:18px;right:18px;
+    height:30px;
+    background:var(--wood);
+    background-image:repeating-linear-gradient(90deg,var(--wood) 0 18px, #98583C 18px 20px);
+    border:3px solid var(--wood-dark);
+    box-shadow:
+      inset 0 6px 0 var(--wood-lite),
+      inset 0 -6px 0 #00000033,
+      0 8px 0 #00000066;
+    z-index:2;
+  }
+  .shelf::before{
+    content:"";position:absolute;left:-3px;right:-3px;bottom:-9px;height:6px;
+    background:var(--wood-dark);
+  }
+  .bracket{
+    position:absolute;
+    bottom:-26px;
+    width:22px;height:26px;
+    z-index:1;
+  }
+  .bracket.l{left:36px;}
+  .bracket.r{right:36px;}
+  .bracket .step{
+    position:absolute;left:0;
+    background:var(--wood-dark);
+    box-shadow:inset 2px 0 0 #6E3522;
+  }
+  .bracket .s1{top:0;width:22px;height:8px;background:var(--wood);box-shadow:inset 0 3px 0 var(--wood-lite);}
+  .bracket .s2{top:8px;width:17px;height:7px;background:var(--wood-dark);}
+  .bracket .s3{top:15px;width:11px;height:6px;background:var(--wood-dark);}
+  .bracket .s4{top:21px;width:6px;height:5px;background:var(--wood-dark);}
+  .bracket::after{
+    content:"";position:absolute;left:3px;top:3px;width:22px;height:26px;
+    background:#00000055;z-index:-1;
+    clip-path:polygon(0 0,100% 0,100% 31%,77% 31%,77% 58%,50% 58%,50% 81%,27% 81%,27% 100%,0 100%);
+  }
+
+  /* ============================================================
+     K's NOTE — blooms in. The heart of the moment: prominent,
+     set apart, gold Pixelify Sans, soft pale-gold halo, slightly
+     scaled up as if arriving gently.
+     ============================================================ */
+  .note-bloom{
+    position:relative;z-index:3;
+    display:flex;justify-content:center;
+    padding:60px 0 14px;
+  }
+  /* soft radial bloom behind the note */
+  .note-bloom::before{
+    content:"";position:absolute;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+    width:680px;height:300px;
+    background:radial-gradient(ellipse at center,
+      #E9D08A33 0%, #E9D08A14 40%, transparent 72%);
+    pointer-events:none;z-index:0;
+  }
+  .note{
+    position:relative;z-index:2;
+    max-width:560px;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #4a3f30,
+      0 0 0 6px #0e1011,
+      0 0 26px 4px #E9D08A4d,      /* the bloom glow — moment of arrival */
+      6px 6px 0 #000000bb;
+    padding:30px 36px;
+    text-align:center;
+    transform:scale(1.04);          /* gently scaled up, just landed */
+  }
+  /* lit top lip on the note panel to echo the bloom */
+  .note::before{
+    content:"";position:absolute;top:3px;left:3px;right:3px;height:5px;
+    background:#5a4c38;opacity:.6;
+  }
+  .note p{
+    font-family:'Pixelify Sans',monospace;
+    color:var(--gold);
+    font-size:24px;
+    line-height:1.55;
+    margin:0;
+    letter-spacing:.5px;
+    text-shadow:0 0 10px #E9D08A3a;
+  }
+  .note .seed{color:var(--bloom);}
+  .note .sign{
+    display:block;margin-top:6px;
+    font-size:20px;color:var(--bloom);letter-spacing:1px;
+  }
+
+  /* quiet secondary copy under the note (Inter) */
+  .quiet{
+    position:relative;z-index:3;
+    text-align:center;
+    font-family:'Inter',sans-serif;
+    font-size:13px;letter-spacing:.6px;
+    color:var(--muted);
+    margin:18px auto 0;
+    max-width:480px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+    </div>
+    <div class="stage">
+      <div class="bg-checker"></div>
+
+      <!-- string lights -->
+      <div class="lights">
+        <div class="wire"></div>
+        <div class="bulb" style="left:8%"></div>
+        <div class="bulb" style="left:30%"></div>
+        <div class="bulb" style="left:52%"></div>
+        <div class="bulb" style="left:74%"></div>
+      </div>
+
+      <!-- KEPT eyebrow — celebrating done -->
+      <p class="eyebrow">KEPT</p>
+
+      <!-- THE DRIFTING TASK: just-finished, lifting off, descending toward the garden -->
+      <div class="drift-wrap">
+        <div class="ghost g1"></div>
+        <div class="ghost g2"></div>
+
+        <div class="focus-card">
+          <div class="focus-eyebrow"><span class="pix-check"></span> JUST KEPT</div>
+          <p class="focus-task">Read one chapter for seminar</p>
+          <p class="release">letting it settle into the garden…</p>
+        </div>
+
+        <div class="descend" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- shelf scene -->
+      <div class="shelf-scene">
+        <div class="pots">
+          <!-- the NEW sprout, blooming in among the existing garden -->
+          <div class="new-sprout">
+            <span class="grew">+1 · the garden grew</span>
+            <span class="spark s-a"></span>
+            <span class="spark s-b"></span>
+            <span class="spark s-c"></span>
+            <img src="./sprites/plant1_sprout.png" alt="new potted sprout, just appeared">
+          </div>
+          <img class="p2" src="./sprites/plant2_small.png" alt="small potted plant">
+          <img class="p3" src="./sprites/plant3_medium.png" alt="medium potted plant">
+          <img class="p4" src="./sprites/plant4_fuller.png" alt="fuller potted plant">
+          <img class="p5" src="./sprites/plant5_vine.png" alt="potted vine">
+        </div>
+
+        <div class="shelf"></div>
+        <span class="bracket l">
+          <span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span>
+        </span>
+        <span class="bracket r">
+          <span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span>
+        </span>
+      </div>
+
+      <!-- K's NOTE — blooms in, the heart of the moment -->
+      <div class="note-bloom">
+        <div class="note">
+          <p>“Look how far you've come, Christopher. <span class="seed">🌱</span>
+            <span class="sign">— K”</span></p>
+        </div>
+      </div>
+
+      <p class="quiet">Take your time. Nothing else is asking for you right now.</p>
+
+      <div style="height:36px"></div>
+    </div>
+  </div>
+
+</body>
+</html>

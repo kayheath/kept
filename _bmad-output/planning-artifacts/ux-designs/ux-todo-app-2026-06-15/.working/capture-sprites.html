@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Add a thing (capture)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+  /* push the "+" to the far right of the title bar, shown ACTIVE/selected */
+  .titlebar .spacer{flex:1;}
+  .titlebar .plus-btn{
+    position:relative;
+    width:26px;height:26px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:linear-gradient(var(--surface),#1d2421);
+    border:3px solid #0e1011;
+    /* selected glow ring in growth green */
+    box-shadow:
+      0 0 0 3px var(--growth-deep),
+      3px 3px 0 #00000088;
+    image-rendering:pixelated;
+  }
+  .titlebar .plus-btn::before{content:"";position:absolute;left:11px;top:5px;width:4px;height:16px;background:var(--growth);}
+  .titlebar .plus-btn::after{content:"";position:absolute;top:11px;left:5px;width:16px;height:4px;background:var(--growth);}
+
+  .stage{
+    position:relative;
+    padding:30px 60px 0;
+    min-height:600px;
+  }
+
+  /* ---------- subtle checkerboard texture ---------- */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:
+      repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;
+    opacity:.18;
+    pointer-events:none;z-index:0;
+  }
+  .stage > *{position:relative;}
+
+  /* ---------- back affordance (calm way out) ---------- */
+  .back{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;letter-spacing:1px;
+    color:var(--muted);
+    background:transparent;
+    border:none;
+    padding:6px 2px;
+    z-index:3;
+    cursor:default;
+  }
+  .back .arrow{
+    font-size:18px;color:var(--growth);
+    text-shadow:2px 2px 0 #00000077;
+  }
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:5px;
+    font-size:15px;
+    color:var(--gold);
+    margin:18px 0 8px;
+    z-index:3;
+    text-shadow:2px 2px 0 #00000077;
+  }
+  .headline{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:600;
+    font-size:40px;
+    letter-spacing:1px;
+    margin:0 0 10px;
+    color:var(--text);
+    text-shadow:3px 3px 0 #00000066;
+    z-index:3;
+  }
+  .subcopy{
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    color:var(--muted);
+    margin:0 0 30px;
+    letter-spacing:.4px;
+    line-height:1.5;
+    max-width:540px;
+    z-index:3;
+  }
+
+  /* ---------- the star: pixel text input ---------- */
+  .capture-wrap{position:relative;z-index:3;max-width:680px;}
+  .input-field{
+    position:relative;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      inset 0 0 0 3px #2c352f,
+      10px 10px 0 0 #000000bb;
+    padding:26px 30px;
+    display:flex;
+    align-items:center;
+  }
+  .input-field::before{
+    content:"";position:absolute;top:3px;left:3px;width:28px;height:6px;
+    background:#33403a;
+  }
+  .input-field::after{
+    content:"";position:absolute;left:-6px;right:-6px;bottom:-6px;height:6px;
+    background-image:repeating-linear-gradient(90deg,#0e1011 0 4px, transparent 4px 8px);
+    background-size:8px 6px;
+  }
+  .typed{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:500;
+    font-size:34px;
+    line-height:1.3;
+    color:var(--text);
+    letter-spacing:.4px;
+  }
+  /* blinking caret block, pure CSS */
+  .caret{
+    display:inline-block;
+    width:14px;height:34px;
+    background:var(--growth);
+    margin-left:6px;
+    vertical-align:-4px;
+    animation:blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  /* enter hint just under input */
+  .enter-hint{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;
+    color:var(--muted);
+    margin:20px 0 0;
+    letter-spacing:.3px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .keycap{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;letter-spacing:1px;
+    color:var(--text);
+    background:linear-gradient(var(--surface-2),#222a26);
+    border:3px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f, 3px 3px 0 #00000099;
+    padding:4px 10px;
+  }
+  .enter-hint .tick{color:var(--growth);}
+
+  /* ---------- optional, tucked-away dates ---------- */
+  .optional-block{
+    position:relative;z-index:3;
+    margin-top:42px;max-width:680px;
+  }
+  .optional-label{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;letter-spacing:2px;
+    color:var(--muted);
+    opacity:.8;
+    margin:0 0 14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .optional-label .dash{color:var(--growth-deep);}
+  .chip-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .opt-chip{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;letter-spacing:.5px;
+    color:var(--muted);
+    background:transparent;
+    border:3px dashed #3a463f;
+    padding:11px 18px;
+    display:inline-flex;align-items:center;gap:10px;
+    box-shadow:3px 3px 0 #00000055;
+    cursor:default;
+  }
+  .opt-chip .pico{
+    width:11px;height:11px;display:inline-block;position:relative;
+    image-rendering:pixelated;
+  }
+  /* do-date: small calm sprout-dot */
+  .opt-chip.dodate .pico{background:var(--growth-deep);box-shadow:-3px 0 0 var(--growth);}
+  /* deadline: calm NON-RED gold tag */
+  .opt-chip.deadline .pico{background:var(--gold);box-shadow:-3px 0 0 var(--bloom);}
+  .opt-chip .small{color:var(--muted);opacity:.7;font-size:13px;}
+
+  /* ---------- add / confirm affordance ---------- */
+  .confirm-bar{
+    position:relative;z-index:3;
+    display:flex;align-items:center;gap:18px;
+    margin-top:46px;
+  }
+  .add-btn{
+    font-family:'Pixelify Sans',monospace;
+    font-size:18px;letter-spacing:1px;font-weight:500;
+    color:var(--base);
+    background:linear-gradient(var(--growth),var(--growth-deep));
+    border:3px solid #0e1011;
+    padding:14px 28px;
+    display:inline-flex;align-items:center;gap:12px;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      6px 6px 0 #000000bb;
+    cursor:default;
+  }
+  .add-btn .ico{
+    width:14px;height:14px;background:var(--base);position:relative;
+    image-rendering:pixelated;
+  }
+  .add-btn .ico::before{content:"";position:absolute;left:5px;top:0;width:4px;height:14px;background:var(--base);}
+  /* tiny pixel "+" rendered light on the dark glyph box */
+  .add-btn .plus{
+    width:14px;height:14px;position:relative;display:inline-block;image-rendering:pixelated;
+  }
+  .add-btn .plus::before{content:"";position:absolute;left:5px;top:0;width:4px;height:14px;background:var(--base);}
+  .add-btn .plus::after{content:"";position:absolute;top:5px;left:0;width:14px;height:4px;background:var(--base);}
+  .or-enter{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;color:var(--muted);letter-spacing:.5px;
+  }
+
+  /* ---------- ambient plant + reassurance ---------- */
+  .footer-scene{
+    position:relative;z-index:3;
+    margin-top:54px;
+    display:flex;align-items:flex-end;gap:18px;
+    padding-bottom:20px;
+  }
+  .footer-scene img{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    display:block;width:60px;height:auto;
+    filter:drop-shadow(3px 3px 0 #00000055);
+  }
+  .reassure{
+    font-family:'Pixelify Sans',monospace;
+    font-size:16px;color:var(--gold);
+    letter-spacing:.4px;line-height:1.5;margin:0 0 8px;
+  }
+  .reassure .heart{color:var(--bloom);}
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+      <span class="spacer"></span>
+      <!-- the same "+" from home, now ACTIVE/selected (green ring) -->
+      <span class="plus-btn" title="add a thing"></span>
+    </div>
+    <div class="stage">
+      <div class="bg-checker"></div>
+
+      <!-- calm way back -->
+      <span class="back"><span class="arrow">←</span> back</span>
+
+      <!-- header -->
+      <p class="eyebrow">CAPTURE</p>
+      <h1 class="headline">What's on your mind?</h1>
+      <p class="subcopy">Just say it. I'll tuck it where it belongs — no planning needed.</p>
+
+      <!-- THE STAR: a single prominent pixel-bordered input -->
+      <div class="capture-wrap">
+        <div class="input-field">
+          <span class="typed">Email Prof. Lin back</span><span class="caret"></span>
+        </div>
+        <p class="enter-hint">
+          <span class="tick">›</span> Press <span class="keycap">Enter</span> and you're done. That's all it takes.
+        </p>
+      </div>
+
+      <!-- OPTIONAL, tucked-away, muted dates -->
+      <div class="optional-block">
+        <p class="optional-label"><span class="dash">—</span> if you want — totally optional</p>
+        <div class="chip-row">
+          <span class="opt-chip dodate"><span class="pico"></span> add a do-date <span class="small">(when you'll do it)</span></span>
+          <span class="opt-chip deadline"><span class="pico"></span> add a deadline <span class="small">(when it's due)</span></span>
+        </div>
+      </div>
+
+      <!-- add / confirm -->
+      <div class="confirm-bar">
+        <span class="add-btn"><span class="plus"></span> add to today</span>
+        <span class="or-enter">…or just hit Enter</span>
+      </div>
+
+      <!-- ambient plant + gentle reassurance -->
+      <div class="footer-scene">
+        <img src="./sprites/plant1_sprout.png" alt="potted sprout">
+        <p class="reassure">Nothing to organize. Drop it here and let it rest. <span class="heart">♥</span></p>
+      </div>
+
+      <div style="height:30px"></div>
+    </div>
+  </div>
+
+</body>
+</html>

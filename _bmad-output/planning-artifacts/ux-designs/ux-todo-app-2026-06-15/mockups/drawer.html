@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — The Drawer (find · edit · let go)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame (matches Home) ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+  .titlebar .spacer{flex:1;}
+  /* ---------- title-bar nav cluster ----------
+     home · greenhouse · journal · DRAWER(selected) · "+" — pixel-art icons.
+     The drawer is the 4th opt-in surface; selected = growth-deep ring. */
+  .nav-btn{
+    position:relative;
+    width:26px;height:24px;
+    flex:0 0 auto;
+    background:linear-gradient(var(--surface),#1f2623);
+    border:2px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f, 2px 2px 0 #00000088;
+    cursor:pointer;image-rendering:pixelated;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Pixelify Sans',monospace;font-size:15px;line-height:1;
+    color:var(--muted);
+  }
+  .nav-btn svg{width:18px;height:18px;display:block;shape-rendering:crispEdges;image-rendering:pixelated;}
+  .nav-btn.sel{
+    box-shadow:0 0 0 2px var(--growth-deep), 2px 2px 0 #00000088;
+    background:linear-gradient(#26302b,#1d2421);
+  }
+  .add-task{
+    position:relative;
+    width:26px;height:24px;
+    flex:0 0 auto;
+    background:linear-gradient(var(--surface),#1f2623);
+    border:2px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f, 2px 2px 0 #00000088;
+    cursor:pointer;image-rendering:pixelated;display:inline-block;
+  }
+  .add-task::before{content:"";position:absolute;left:50%;top:50%;width:4px;height:14px;transform:translate(-50%,-50%);background:var(--growth);}
+  .add-task::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:4px;transform:translate(-50%,-50%);background:var(--growth);}
+  .titlebar .navgap{width:6px;flex:0 0 auto;}
+
+  .stage{position:relative;padding:42px 60px 54px;min-height:640px;}
+
+  /* checkerboard texture (matches Home) */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;opacity:.18;pointer-events:none;z-index:0;
+  }
+  .stage > *{position:relative;z-index:2;}
+
+  /* ---------- header (matches greenhouse) ---------- */
+  .header{text-align:center;margin:2px 0 26px;z-index:3;}
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:6px;font-size:16px;color:var(--gold);
+    margin:0 0 12px;text-shadow:2px 2px 0 #00000077;
+  }
+  .subtitle{
+    font-family:'Pixelify Sans',monospace;
+    font-size:18px;color:var(--text);margin:0;letter-spacing:.4px;
+  }
+  .subtitle .soft{color:var(--muted);font-size:15px;display:block;margin-top:8px;letter-spacing:.3px;}
+
+  /* single-column, reading-width — calm, never a dense dashboard */
+  .keep{max-width:660px;margin:0 auto;}
+
+  /* ---------- search: confirm what you're already keeping ---------- */
+  .search{
+    display:flex;align-items:center;gap:11px;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:0 0 0 3px #3a463f, 6px 6px 0 #00000099;
+    padding:12px 15px;margin-bottom:34px;
+  }
+  .search svg{width:16px;height:16px;flex:0 0 auto;shape-rendering:crispEdges;}
+  .search .ph{
+    font-family:'Pixelify Sans',monospace;font-size:16px;letter-spacing:.4px;
+    color:var(--muted);flex:1;
+  }
+  /* blinking sage caret — same family as the capture input */
+  .search .caret{display:inline-block;width:3px;height:18px;background:var(--growth);vertical-align:-3px;animation:blink 1.1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* ---------- gentle groups: Soon / Later / Someday ---------- */
+  .group{margin-bottom:30px;}
+  .group-head{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;letter-spacing:4px;font-weight:600;
+    margin:0 0 4px;display:flex;align-items:center;gap:9px;
+  }
+  .group.soon    .group-head{color:var(--growth);}
+  .group.later   .group-head{color:var(--muted);}
+  .group.someday .group-head{color:var(--muted);}
+  .gmark{width:11px;height:11px;display:inline-block;image-rendering:pixelated;box-shadow:2px 2px 0 #00000055;}
+  .group.soon    .gmark{background:var(--growth);}
+  .group.later   .gmark{background:var(--growth-deep);}
+  .group.someday .gmark{background:#3c453f;}
+  .group-sub{
+    font-family:'Pixelify Sans',monospace;font-size:11px;color:#6f7567;
+    letter-spacing:.6px;margin:0 0 8px 20px;
+  }
+
+  /* a held task — plain pixel line, calm bullet, NO checkbox, NO count */
+  .item{
+    font-family:'Pixelify Sans',monospace;
+    font-size:18px;line-height:1.4;color:var(--text);letter-spacing:.3px;
+    padding:13px 10px;display:flex;align-items:flex-start;gap:12px;
+    border-top:2px solid #1c221f;cursor:pointer;
+  }
+  .item:first-of-type{border-top:none;}
+  .item .dotmk{flex:none;width:8px;height:8px;margin-top:7px;background:var(--growth-deep);image-rendering:pixelated;box-shadow:2px 2px 0 #00000044;}
+  .item .txt{flex:1;}
+  /* "edit ✎" stays hidden at rest — appears only on hover/focus, so the
+     resting list is clean pixel lines. The open editor keeps its "editing…". */
+  .item .edithint{flex:none;color:#5d6359;font-size:13px;font-family:'Pixelify Sans',monospace;letter-spacing:.5px;margin-top:3px;opacity:0;transition:opacity .12s;}
+  .item:hover .edithint,.item:focus-within .edithint{opacity:1;}
+  .item.sel .edithint{opacity:1;}
+
+  /* quiet deadline tag — muted, calm, NON-RED safety net (matches peek) */
+  .deadline{
+    display:inline-block;margin-left:10px;
+    font-family:'Pixelify Sans',monospace;font-size:12px;letter-spacing:1px;
+    color:var(--muted);background:#1d2320;border:2px solid #313a35;
+    padding:3px 9px;box-shadow:2px 2px 0 #00000055;vertical-align:2px;
+  }
+  .deadline .pin{color:var(--gold);}
+
+  /* ===========================================================
+     SINGLE-TASK EDITOR — opens for ONE task at a time.
+     Edit the words, reschedule via the same optional date chips
+     as capture (never red), or gently "let it go".
+     =========================================================== */
+  .item.sel{
+    background:linear-gradient(#26302b,#1d2421);
+    box-shadow:inset 3px 0 0 var(--growth-deep);
+    border-top:2px solid #1c221f;
+  }
+  .editor{
+    margin:0 0 6px 0;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:0 0 0 3px #3a463f,0 0 0 6px #0e1011,8px 8px 0 #000000bb;
+    padding:20px 20px 18px;
+  }
+  .editor .elabel{
+    font-family:'Pixelify Sans',monospace;font-size:11px;letter-spacing:2px;
+    color:var(--growth);margin:0 0 10px;
+  }
+  /* editable title field — pixel-bordered, sage caret */
+  .titlefield{
+    background:var(--surface-2);
+    border:2px solid #0e1011;box-shadow:inset 0 0 0 2px #313a35,3px 3px 0 #00000088;
+    padding:12px 14px;margin-bottom:16px;
+    font-family:'Pixelify Sans',monospace;font-size:19px;color:var(--text);letter-spacing:.3px;
+    display:flex;align-items:center;
+  }
+  .titlefield .caret{display:inline-block;width:3px;height:21px;background:var(--growth);margin-left:2px;animation:blink 1.1s steps(1) infinite;}
+
+  /* optional date chips — dashed, muted, clearly skippable. deadline never red */
+  .chips{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+  .chip{
+    font-family:'Pixelify Sans',monospace;font-size:13px;letter-spacing:.5px;
+    color:var(--text);background:#1d2320;border:2px dashed #46514a;
+    padding:8px 12px;display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  }
+  .chip .cdot{width:9px;height:9px;image-rendering:pixelated;box-shadow:1px 1px 0 #00000066;}
+  .chip.do  .cdot{background:var(--growth);}
+  .chip.due .cdot{background:var(--bloom);}   /* gold/bloom — NEVER red */
+  .chip .clear{color:#6f7567;font-size:13px;margin-left:3px;}
+
+  /* actions: save (calm) + let it go (muted, non-alarming) */
+  .actions{display:flex;align-items:center;gap:14px;border-top:2px solid #1c221f;padding-top:16px;}
+  .btn{
+    font-family:'Pixelify Sans',monospace;font-size:14px;letter-spacing:.8px;
+    border:2px solid #0e1011;padding:9px 16px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:9px;
+  }
+  .btn.save{
+    color:#16191A;background:linear-gradient(var(--growth),var(--growth-deep));
+    box-shadow:0 0 0 2px #3a463f,3px 3px 0 #00000099;font-weight:600;
+  }
+  .btn.ghost{
+    color:var(--muted);background:linear-gradient(var(--surface-2),#222a26);
+    box-shadow:0 0 0 2px #3a463f,3px 3px 0 #00000099;
+  }
+  .actions .spacer{flex:1;}
+  /* let it go — quiet, to the side, never red */
+  .letgo{
+    font-family:'Pixelify Sans',monospace;font-size:13px;letter-spacing:.5px;
+    color:#8b9180;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  }
+  .letgo .lf{color:var(--muted);}
+
+  /* calm "let it go" confirmation — gentle, NON-RED */
+  .confirm{
+    margin-top:14px;background:#1c2320;border:2px solid #313a35;
+    box-shadow:3px 3px 0 #00000077;padding:12px 14px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .confirm .q{font-family:'Pixelify Sans',monospace;font-size:14px;color:var(--text);letter-spacing:.3px;}
+  .confirm .release{font-family:'Pixelify Sans',monospace;font-size:13px;letter-spacing:.6px;color:var(--gold);cursor:pointer;border-bottom:2px solid #4a4334;padding-bottom:1px;}
+  .confirm .keepit{font-family:'Pixelify Sans',monospace;font-size:13px;letter-spacing:.6px;color:var(--muted);cursor:pointer;}
+
+  /* ---------- footer reassurance ---------- */
+  .foot{
+    max-width:600px;margin:36px auto 0;text-align:center;
+  }
+  .foot p{
+    font-family:'Pixelify Sans',monospace;color:var(--muted);font-size:14px;
+    line-height:1.5;margin:0;letter-spacing:.4px;
+  }
+  .foot .leaf{color:var(--growth);}
+  .foot img{
+    image-rendering:pixelated;image-rendering:crisp-edges;
+    width:40px;height:auto;margin-top:18px;
+    filter:drop-shadow(3px 3px 0 #00000055);opacity:.85;
+  }
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+      <span class="spacer"></span>
+      <!-- home -->
+      <span class="nav-btn home" role="button" tabindex="0" title="Home" aria-label="Home">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="7" y="2" width="2" height="1" fill="#C2814C"/>
+          <rect x="6" y="3" width="4" height="1" fill="#C2814C"/>
+          <rect x="5" y="4" width="6" height="1" fill="#C2814C"/>
+          <rect x="4" y="5" width="8" height="1" fill="#C2814C"/>
+          <rect x="3" y="6" width="10" height="1" fill="#C2814C"/>
+          <rect x="4" y="7" width="8" height="6" fill="#E4E5D8"/>
+          <rect x="7" y="9" width="2" height="4" fill="#16191A"/>
+        </svg>
+      </span>
+      <!-- greenhouse -->
+      <span class="nav-btn green" role="button" tabindex="0" title="The greenhouse" aria-label="The greenhouse">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="7" y="3" width="2" height="2" fill="#9DBE9A"/>
+          <rect x="7" y="5" width="2" height="5" fill="#7BA37F"/>
+          <rect x="4" y="6" width="3" height="2" fill="#9DBE9A"/>
+          <rect x="9" y="5" width="3" height="2" fill="#9DBE9A"/>
+          <rect x="4" y="10" width="8" height="1" fill="#C2814C"/>
+          <rect x="5" y="11" width="6" height="3" fill="#AD6A38"/>
+        </svg>
+      </span>
+      <!-- journal -->
+      <span class="nav-btn journal" role="button" tabindex="0" title="Day journal" aria-label="Day journal">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="3" y="3" width="10" height="10" fill="#9AA08C"/>
+          <rect x="3" y="3" width="2" height="10" fill="#6E7363"/>
+          <rect x="6" y="5" width="5" height="1" fill="#16191A"/>
+          <rect x="6" y="8" width="5" height="1" fill="#16191A"/>
+          <rect x="6" y="11" width="5" height="1" fill="#16191A"/>
+        </svg>
+      </span>
+      <!-- drawer (SELECTED): a little wooden chest of drawers with gold handles -->
+      <span class="nav-btn drawer sel" role="button" tabindex="0" title="The drawer" aria-label="The drawer" aria-current="page">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="3" y="3" width="10" height="10" fill="#AD694A"/>
+          <rect x="3" y="3" width="10" height="1" fill="#C2814C"/>
+          <rect x="3" y="8" width="10" height="1" fill="#50281D"/>
+          <rect x="6" y="5" width="4" height="1" fill="#E9D08A"/>
+          <rect x="6" y="10" width="4" height="1" fill="#E9D08A"/>
+          <rect x="3" y="12" width="10" height="1" fill="#50281D"/>
+        </svg>
+      </span>
+      <span class="navgap"></span>
+      <span class="add-task" role="button" tabindex="0" title="Add a task" aria-label="Add a task"></span>
+    </div>
+
+    <div class="stage">
+      <div class="bg-checker"></div>
+
+      <!-- opt-in surface, reached via the title-bar nav. NO clock window (Home only). -->
+      <div class="header">
+        <p class="eyebrow">THE DRAWER</p>
+        <p class="subtitle">Everything you're keeping.
+          <span class="soft">It's all here. Nothing's lost.</span>
+        </p>
+      </div>
+
+      <div class="keep">
+
+        <!-- search: "did I already add this?" -->
+        <div class="search" role="search">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="1" fill="#9AA08C"/>
+            <rect x="3" y="9" width="7" height="1" fill="#9AA08C"/>
+            <rect x="3" y="3" width="1" height="7" fill="#9AA08C"/>
+            <rect x="9" y="3" width="1" height="7" fill="#9AA08C"/>
+            <rect x="10" y="10" width="2" height="1" fill="#9AA08C"/>
+            <rect x="11" y="11" width="2" height="1" fill="#9AA08C"/>
+            <rect x="12" y="12" width="1" height="1" fill="#9AA08C"/>
+          </svg>
+          <span class="ph">search what you're keeping<span class="caret"></span></span>
+        </div>
+
+        <!-- ===== SOON ===== -->
+        <div class="group soon">
+          <p class="group-head"><span class="gmark"></span> SOON</p>
+          <p class="group-sub">the next few days</p>
+
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Email Prof. Lin back
+              <span class="deadline"><span class="pin">›</span> reply · Tue</span>
+            </span>
+            <span class="edithint">edit ✎</span>
+          </div>
+
+          <!-- SELECTED task → its single-task editor is open -->
+          <div class="item sel">
+            <span class="dotmk"></span>
+            <span class="txt">Outline the methods section
+              <span class="deadline"><span class="pin">›</span> paper · Fri</span>
+            </span>
+            <span class="edithint">editing…</span>
+          </div>
+          <div class="editor">
+            <p class="elabel">EDIT THIS ONE</p>
+            <div class="titlefield">Outline the methods section<span class="caret"></span></div>
+            <div class="chips">
+              <span class="chip do"><span class="cdot"></span> do · Thu <span class="clear">✕</span></span>
+              <span class="chip due"><span class="cdot"></span> due · Fri <span class="clear">✕</span></span>
+            </div>
+            <div class="actions">
+              <span class="btn save">save</span>
+              <span class="btn ghost">cancel</span>
+              <span class="spacer"></span>
+              <span class="letgo"><span class="lf">~</span> let it go</span>
+            </div>
+            <!-- calm, non-alarming delete confirmation (never red) -->
+            <div class="confirm">
+              <span class="q">Let this one go?</span>
+              <span class="release">yes, release it</span>
+              <span class="keepit">keep it</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== LATER ===== -->
+        <div class="group later">
+          <p class="group-head"><span class="gmark"></span> LATER</p>
+          <p class="group-sub">further out — no rush</p>
+
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Renew library books</span>
+            <span class="edithint">edit ✎</span>
+          </div>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Draft the conference abstract
+              <span class="deadline"><span class="pin">›</span> submit · the 30th</span>
+            </span>
+            <span class="edithint">edit ✎</span>
+          </div>
+        </div>
+
+        <!-- ===== SOMEDAY ===== -->
+        <div class="group someday">
+          <p class="group-head"><span class="gmark"></span> SOMEDAY</p>
+          <p class="group-sub">kept for whenever — no date set</p>
+
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Reorganize the bookshelf</span>
+            <span class="edithint">edit ✎</span>
+          </div>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Try the pour-over recipe Sam sent</span>
+            <span class="edithint">edit ✎</span>
+          </div>
+          <div class="item">
+            <span class="dotmk"></span>
+            <span class="txt">Repot the pothos</span>
+            <span class="edithint">edit ✎</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="foot">
+        <p>Nothing here is asking for you. <span class="leaf">&hearts;</span> Open the drawer when you want it; close it when you don't.</p>
+        <img src="./sprites/plant1_sprout.png" alt="potted sprout">
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

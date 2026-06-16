@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — The Greenhouse (real sprites)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    /* shelf wood matches the orange window frame palette (Home) */
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame (matches Home) ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+  .titlebar .spacer{flex:1;}
+  /* ---------- title-bar nav cluster (present on every surface) ----------
+     Small pixel-bordered square buttons, right-aligned: home · greenhouse ·
+     journal · "+". This is the opt-in entry pattern into the greenhouse and
+     Day Journal. The button for the CURRENT surface shows a growth-deep
+     selected ring (here: greenhouse). All glyphs in the pixel display face. */
+  .nav-btn{
+    position:relative;
+    width:26px;height:24px;
+    flex:0 0 auto;
+    background:linear-gradient(var(--surface),#1f2623);
+    border:2px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f, 2px 2px 0 #00000088;
+    cursor:pointer;image-rendering:pixelated;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Pixelify Sans',monospace;font-size:15px;line-height:1;
+    color:var(--muted);
+  }
+  /* pixel-art icon: crisp rectangles, no anti-aliasing */
+  .nav-btn svg{width:18px;height:18px;display:block;shape-rendering:crispEdges;image-rendering:pixelated;}
+  /* selected surface — growth-deep ring (matches the "+"-active spec) */
+  .nav-btn.sel{
+    box-shadow:0 0 0 2px var(--growth-deep), 2px 2px 0 #00000088;
+    background:linear-gradient(#26302b,#1d2421);
+  }
+  /* add-task "+" button — pixel plus glyph */
+  .add-task{
+    position:relative;
+    width:26px;height:24px;
+    flex:0 0 auto;
+    background:linear-gradient(var(--surface),#1f2623);
+    border:2px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f, 2px 2px 0 #00000088;
+    cursor:pointer;image-rendering:pixelated;display:inline-block;
+  }
+  /* symmetric plus: both bars centered on the button's true center */
+  .add-task::before{content:"";position:absolute;left:50%;top:50%;width:4px;height:14px;transform:translate(-50%,-50%);background:var(--growth);}
+  .add-task::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:4px;transform:translate(-50%,-50%);background:var(--growth);}
+  .titlebar .navgap{width:6px;flex:0 0 auto;}
+
+  .stage{position:relative;padding:30px 60px 0;min-height:640px;}
+
+  /* checkerboard texture (matches Home) */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;opacity:.18;pointer-events:none;z-index:0;
+  }
+  .stage > *{position:relative;}
+
+  /* ---------- header ---------- */
+  .header{text-align:center;margin:8px 0 30px;z-index:3;}
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:6px;font-size:16px;color:var(--gold);
+    margin:0 0 12px;text-shadow:2px 2px 0 #00000077;
+  }
+  .subtitle{
+    font-family:'Pixelify Sans',monospace;
+    font-size:18px;color:var(--text);margin:0;letter-spacing:.4px;
+  }
+  .subtitle .soft{color:var(--muted);font-size:15px;display:block;margin-top:8px;letter-spacing:.3px;}
+
+  /* ============================================================
+     GALLERY — repeated wooden shelves, each holding bloomed plants.
+     Same shelf + bracket + plant-sprite language as Home, stacked
+     into a calm wall-of-shelves gallery. Plants rest ON each shelf.
+     ============================================================ */
+  .gallery{position:relative;z-index:2;display:flex;flex-direction:column;gap:72px;margin-top:120px;}
+
+  .shelf-scene{position:relative;height:172px;}
+  .pots{
+    position:absolute;bottom:30px;left:0;right:0;
+    display:flex;align-items:flex-end;justify-content:center;
+    gap:46px;padding:0 70px;z-index:3;
+  }
+  .pots img{
+    image-rendering:pixelated;image-rendering:crisp-edges;
+    display:block;height:auto;
+    filter:drop-shadow(3px 3px 0 #00000055);
+  }
+  .pots .p1{width:72px;}  .pots .p2{width:72px;}  .pots .p3{width:84px;}
+  .pots .p4{width:84px;}  .pots .p5{width:66px;}
+
+  /* a single plant + its (optional) caption, stacked */
+  .plant{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+  /* favorited = kept on the windowsill: soft bloom glow + calm gold tag.
+     The ONE true soft glow in the system, reserved for blooms. No counts. */
+  .plant.fav img{filter:drop-shadow(0 0 10px #E9D08A66) drop-shadow(3px 3px 0 #00000055);}
+  .sill-tag{
+    position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);
+    white-space:nowrap;
+    font-family:'Pixelify Sans',monospace;font-size:12px;letter-spacing:.5px;
+    color:var(--gold);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  /* small pixel heart in K's bloom gold marks a kept favorite */
+  .sill-tag .hrt{color:var(--bloom);font-size:13px;text-shadow:0 0 6px #E9D08Aaa;}
+
+  /* SELECTED plant — calm curation popover (no red, no counts) */
+  .plant.sel img{filter:drop-shadow(0 0 12px #9DBE9A55) drop-shadow(3px 3px 0 #00000055);}
+  .plant.sel::after{
+    content:"";position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);
+    width:78px;height:5px;background:var(--growth);box-shadow:2px 2px 0 #00000066;
+  }
+  .curate{
+    position:absolute;left:50%;top:-92px;transform:translateX(-50%);
+    width:206px;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:0 0 0 3px #3a463f,0 0 0 6px #0e1011,6px 6px 0 #000000bb;
+    padding:13px 14px 14px;
+    z-index:6;text-align:center;
+  }
+  .curate .lead{
+    font-family:'Pixelify Sans',monospace;font-size:13px;color:var(--muted);
+    margin:0 0 11px;letter-spacing:.4px;
+  }
+  .curate .act{
+    font-family:'Pixelify Sans',monospace;font-size:14px;letter-spacing:.6px;
+    color:var(--text);
+    background:linear-gradient(var(--surface-2),#222a26);
+    border:2px solid #0e1011;
+    box-shadow:0 0 0 2px #3a463f,3px 3px 0 #000000aa;
+    padding:9px 12px;display:inline-flex;align-items:center;gap:9px;cursor:default;
+  }
+  .curate .act .lf{color:var(--bloom);font-size:15px;text-shadow:0 0 6px #E9D08A88;}
+  .curate::after{ /* little pointer down to the plant */
+    content:"";position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);
+    width:12px;height:12px;background:var(--surface);
+    border-right:3px solid #0e1011;border-bottom:3px solid #0e1011;
+    box-shadow:3px 3px 0 #00000044;
+    rotate:45deg;
+  }
+
+  /* wooden shelf (matches Home: lit lip, main face, dark cast, attached brackets) */
+  .shelf{
+    position:absolute;bottom:0;left:18px;right:18px;height:30px;
+    background:var(--wood);
+    background-image:repeating-linear-gradient(90deg,var(--wood) 0 18px, #98583C 18px 20px);
+    border:3px solid var(--wood-dark);
+    box-shadow:inset 0 6px 0 var(--wood-lite),inset 0 -6px 0 #00000033,0 8px 0 #00000066;
+    z-index:2;
+  }
+  .shelf::before{content:"";position:absolute;left:-3px;right:-3px;bottom:-9px;height:6px;background:var(--wood-dark);}
+  .bracket{position:absolute;bottom:-26px;width:22px;height:26px;z-index:1;}
+  .bracket.l{left:60px;} .bracket.r{right:60px;}
+  .bracket .step{position:absolute;left:0;background:var(--wood-dark);box-shadow:inset 2px 0 0 #6E3522;}
+  .bracket .s1{top:0;width:22px;height:8px;background:var(--wood);box-shadow:inset 0 3px 0 var(--wood-lite);}
+  .bracket .s2{top:8px;width:17px;height:7px;background:var(--wood-dark);}
+  .bracket .s3{top:15px;width:11px;height:6px;background:var(--wood-dark);}
+  .bracket .s4{top:21px;width:6px;height:5px;background:var(--wood-dark);}
+  .bracket::after{
+    content:"";position:absolute;left:3px;top:3px;width:22px;height:26px;background:#00000055;z-index:-1;
+    clip-path:polygon(0 0,100% 0,100% 31%,77% 31%,77% 58%,50% 58%,50% 81%,27% 81%,27% 100%,0 100%);
+  }
+
+  /* gentle closing line — it all stays */
+  .footer-note{
+    text-align:center;z-index:3;margin:54px 0 8px;
+    font-family:'Pixelify Sans',monospace;font-size:14px;color:var(--muted);letter-spacing:.5px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+      <span class="spacer"></span>
+      <!-- nav cluster: home · greenhouse(selected) · journal · "+" — pixel-art icons -->
+      <span class="nav-btn home" role="button" tabindex="0" title="Home" aria-label="Home">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <!-- stepped pixel roof (terracotta) -->
+          <rect x="7" y="2" width="2" height="1" fill="#C2814C"/>
+          <rect x="6" y="3" width="4" height="1" fill="#C2814C"/>
+          <rect x="5" y="4" width="6" height="1" fill="#C2814C"/>
+          <rect x="4" y="5" width="8" height="1" fill="#C2814C"/>
+          <rect x="3" y="6" width="10" height="1" fill="#C2814C"/>
+          <!-- walls (off-white) + carved door -->
+          <rect x="4" y="7" width="8" height="6" fill="#E4E5D8"/>
+          <rect x="7" y="9" width="2" height="4" fill="#16191A"/>
+        </svg>
+      </span>
+      <span class="nav-btn green sel" role="button" tabindex="0" title="The greenhouse" aria-label="The greenhouse" aria-current="page">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <!-- potted sprout: green plant + terracotta pot -->
+          <rect x="7" y="3" width="2" height="2" fill="#9DBE9A"/>
+          <rect x="7" y="5" width="2" height="5" fill="#7BA37F"/>
+          <rect x="4" y="6" width="3" height="2" fill="#9DBE9A"/>
+          <rect x="9" y="5" width="3" height="2" fill="#9DBE9A"/>
+          <rect x="4" y="10" width="8" height="1" fill="#C2814C"/>
+          <rect x="5" y="11" width="6" height="3" fill="#AD6A38"/>
+        </svg>
+      </span>
+      <span class="nav-btn journal" role="button" tabindex="0" title="Day journal" aria-label="Day journal">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <!-- notebook of day entries: cover + spine + lines -->
+          <rect x="3" y="3" width="10" height="10" fill="#9AA08C"/>
+          <rect x="3" y="3" width="2" height="10" fill="#6E7363"/>
+          <rect x="6" y="5" width="5" height="1" fill="#16191A"/>
+          <rect x="6" y="8" width="5" height="1" fill="#16191A"/>
+          <rect x="6" y="11" width="5" height="1" fill="#16191A"/>
+        </svg>
+      </span>
+      <span class="navgap"></span>
+      <span class="add-task" role="button" tabindex="0" title="Add a task" aria-label="Add a task"></span>
+    </div>
+    <div class="stage">
+      <div class="bg-checker"></div>
+
+      <!-- opt-in surface reached via the title-bar nav. NO clock window here (Home only). -->
+      <div class="header">
+        <p class="eyebrow">THE GREENHOUSE</p>
+        <p class="subtitle">Everything you've grown.
+          <span class="soft">It all stays here. Nothing ever wilts.</span>
+        </p>
+      </div>
+
+      <div class="gallery">
+
+        <!-- SHELF 1 — includes the SELECTED plant showing the curation popover -->
+        <div class="shelf-scene">
+          <div class="pots">
+            <span class="plant"><img class="p4" src="./sprites/plant4_fuller.png" alt="bloomed plant"></span>
+            <span class="plant fav">
+              <img class="p3" src="./sprites/plant3_medium.png" alt="bloomed plant kept on the windowsill">
+              <span class="sill-tag"><span class="hrt">♥</span> on your sill</span>
+            </span>
+            <span class="plant sel">
+              <!-- calm curation popover: keep this one on the windowsill -->
+              <span class="curate">
+                <p class="lead">keep this one in view?</p>
+                <span class="act"><span class="lf">♥</span> put on the windowsill</span>
+              </span>
+              <img class="p5" src="./sprites/plant5_vine.png" alt="bloomed vine, selected">
+            </span>
+            <span class="plant"><img class="p2" src="./sprites/plant2_small.png" alt="bloomed plant"></span>
+            <span class="plant"><img class="p1" src="./sprites/plant1_sprout.png" alt="bloomed plant"></span>
+          </div>
+          <div class="shelf"></div>
+          <span class="bracket l"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+          <span class="bracket r"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+        </div>
+
+        <!-- SHELF 2 — another favorited plant -->
+        <div class="shelf-scene">
+          <div class="pots">
+            <span class="plant"><img class="p1" src="./sprites/plant1_sprout.png" alt="bloomed plant"></span>
+            <span class="plant"><img class="p5" src="./sprites/plant5_vine.png" alt="bloomed plant"></span>
+            <span class="plant fav">
+              <img class="p4" src="./sprites/plant4_fuller.png" alt="bloomed plant kept on the windowsill">
+              <span class="sill-tag"><span class="hrt">♥</span> on your sill</span>
+            </span>
+            <span class="plant"><img class="p3" src="./sprites/plant3_medium.png" alt="bloomed plant"></span>
+            <span class="plant"><img class="p2" src="./sprites/plant2_small.png" alt="bloomed plant"></span>
+          </div>
+          <div class="shelf"></div>
+          <span class="bracket l"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+          <span class="bracket r"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+        </div>
+
+        <!-- SHELF 3 -->
+        <div class="shelf-scene">
+          <div class="pots">
+            <span class="plant"><img class="p2" src="./sprites/plant2_small.png" alt="bloomed plant"></span>
+            <span class="plant"><img class="p3" src="./sprites/plant3_medium.png" alt="bloomed plant"></span>
+            <span class="plant"><img class="p1" src="./sprites/plant1_sprout.png" alt="bloomed plant"></span>
+            <span class="plant fav">
+              <img class="p5" src="./sprites/plant5_vine.png" alt="bloomed plant kept on the windowsill">
+              <span class="sill-tag"><span class="hrt">♥</span> on your sill</span>
+            </span>
+            <span class="plant"><img class="p4" src="./sprites/plant4_fuller.png" alt="bloomed plant"></span>
+          </div>
+          <div class="shelf"></div>
+          <span class="bracket l"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+          <span class="bracket r"><span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span></span>
+        </div>
+
+      </div>
+
+      <p class="footer-note">every one of these was a day you showed up.</p>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+</body>
+</html>

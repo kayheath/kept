@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Pixel-art Home (2 intensities)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    --wood:#8A552F;
+    --wood-dark:#6E4324;
+    --wood-lite:#B07A47;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:64px;
+    image-rendering:auto;
+  }
+
+  /* ---------- caption ---------- */
+  .caption{
+    width:1000px;
+    max-width:94vw;
+    margin:0 auto 14px;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    padding-left:4px;
+  }
+  .caption .badge{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;
+    letter-spacing:1px;
+    color:var(--base);
+    background:var(--gold);
+    padding:4px 10px;
+    box-shadow:3px 3px 0 #00000055;
+  }
+  .caption h2{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:600;
+    margin:0;
+    font-size:22px;
+    color:var(--text);
+  }
+  .caption span{
+    font-family:'Inter';
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  /* ---------- desktop window frame ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    /* hard stepped pixel border */
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:34px;
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:10px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:14px;
+    letter-spacing:1px;
+    color:var(--muted);
+  }
+
+  .stage{
+    position:relative;
+    padding:54px 56px 0;
+    min-height:560px;
+  }
+
+  /* ---------- background decoration: pixel window + string lights ---------- */
+  .bg-window{
+    position:absolute;
+    top:40px;right:54px;
+    width:120px;height:96px;
+    background:
+      linear-gradient(#2c3531,#2c3531);
+    border:4px solid var(--wood-dark);
+    box-shadow:6px 6px 0 #00000044;
+    image-rendering:pixelated;
+    overflow:hidden;
+  }
+  .bg-window::before{
+    /* moonlit panes */
+    content:"";
+    position:absolute;inset:0;
+    background:
+      linear-gradient(#3a4a55,#26323a),
+      radial-gradient(circle at 70% 30%, var(--bloom) 0 6px, transparent 7px);
+    background-blend-mode:screen;
+    opacity:.6;
+  }
+  .bg-window .mullion-v{position:absolute;left:50%;top:0;bottom:0;width:4px;background:var(--wood-dark);transform:translateX(-50%);}
+  .bg-window .mullion-h{position:absolute;top:50%;left:0;right:0;height:4px;background:var(--wood-dark);transform:translateY(-50%);}
+
+  .lights{
+    position:absolute;
+    top:30px;left:40px;right:40px;
+    height:40px;
+    pointer-events:none;
+  }
+  .lights .wire{
+    position:absolute;top:6px;left:0;right:0;height:3px;
+    background:repeating-linear-gradient(90deg,#3a443f 0 8px, transparent 8px 16px);
+    opacity:.55;
+  }
+  .bulb{
+    position:absolute;top:12px;width:8px;height:10px;
+    background:var(--bloom);
+    box-shadow:0 0 0 2px #00000033, 2px 2px 0 #00000044;
+  }
+
+  /* ---------- eyebrow ---------- */
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:4px;
+    font-size:15px;
+    color:var(--gold);
+    margin:0 0 22px;
+    position:relative;
+    z-index:3;
+  }
+
+  /* ---------- focus card (lifted, pixel border) ---------- */
+  .focus-wrap{position:relative;z-index:3;max-width:620px;}
+  .focus-card{
+    position:relative;
+    background:var(--surface);
+    color:var(--text);
+    padding:28px 30px 26px;
+    /* stepped pixel border via layered outlines + hard drop shadow */
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #3a463f,        /* bevel ring */
+      inset 0 0 0 3px #2c352f,   /* inner edge */
+      8px 8px 0 0 #000000aa;     /* HARD offset lift */
+  }
+  .focus-card::before{
+    /* top-left pixel highlight */
+    content:"";position:absolute;top:3px;left:3px;width:26px;height:6px;
+    background:#33403a;
+  }
+  .focus-eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    font-size:12px;letter-spacing:2px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  }
+  .pix-leaf{
+    width:14px;height:14px;display:inline-block;
+    background:
+      linear-gradient(var(--growth),var(--growth)) 4px 0/6px 4px no-repeat,
+      linear-gradient(var(--growth-deep),var(--growth-deep)) 0 4px/14px 6px no-repeat,
+      linear-gradient(var(--growth),var(--growth)) 4px 10px/6px 4px no-repeat;
+    image-rendering:pixelated;
+  }
+  .focus-task{
+    font-family:'Inter';
+    font-weight:600;
+    font-size:30px;
+    line-height:1.28;
+    margin:0 0 16px;
+    color:var(--text);
+    letter-spacing:.2px;
+  }
+  .hint{
+    font-family:'Inter';
+    font-size:15px;
+    color:var(--muted);
+    margin:0;
+    line-height:1.5;
+  }
+  .hint .tick{color:var(--growth);}
+
+  /* ---------- shelf scene ---------- */
+  .shelf-scene{
+    position:relative;z-index:2;
+    margin-top:46px;
+    height:178px;
+  }
+  .pots{
+    position:absolute;
+    bottom:34px;left:0;right:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:34px;
+    padding:0 30px;
+  }
+  /* pixel pot */
+  .pot{position:relative;text-align:center;}
+  .pot .cast{
+    /* hard pixel cast shadow beneath pot */
+    position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
+    width:46px;height:7px;background:#00000077;
+  }
+  .pot .vessel{
+    width:48px;height:34px;margin:0 auto;
+    background:var(--terra);
+    border:3px solid var(--wood-dark);
+    box-shadow:inset -6px 0 0 #00000022, 4px 4px 0 #00000044;
+    position:relative;
+  }
+  .pot .vessel::before{
+    content:"";position:absolute;top:-7px;left:-4px;right:-4px;height:7px;
+    background:var(--terra-lite);border:3px solid var(--wood-dark);border-bottom:none;
+  }
+  /* pixel plant blocks */
+  .plant{
+    height:30px;display:flex;align-items:flex-end;justify-content:center;gap:3px;
+    margin-bottom:2px;
+  }
+  .blk{width:7px;background:var(--growth);image-rendering:pixelated;box-shadow:2px 2px 0 #00000033;}
+  .blk.deep{background:var(--growth-deep);}
+  .blk.bloom{background:var(--bloom);}
+  .sprout{font-size:24px;line-height:1;filter:drop-shadow(3px 3px 0 #00000055);}
+
+  /* the wooden shelf / ledge */
+  .shelf{
+    position:absolute;
+    bottom:0;left:18px;right:18px;
+    height:30px;
+    background:var(--wood);
+    border:3px solid var(--wood-dark);
+    box-shadow:
+      inset 0 6px 0 var(--wood-lite),       /* lit top lip */
+      inset 0 -6px 0 #00000033,
+      0 8px 0 #00000066;                      /* hard cast under shelf */
+  }
+  .shelf::before{
+    /* stepped pixel front edge */
+    content:"";position:absolute;left:-3px;right:-3px;bottom:-9px;height:6px;
+    background:var(--wood-dark);
+  }
+  .shelf-brackets{position:absolute;bottom:-9px;left:0;right:0;height:0;}
+  .bracket{position:absolute;bottom:-26px;width:14px;height:20px;background:var(--wood-dark);box-shadow:3px 3px 0 #00000055;}
+  .bracket.l{left:46px;} .bracket.r{right:46px;}
+
+  /* ---------- show me my day affordance ---------- */
+  .footer-bar{
+    position:relative;z-index:3;
+    display:flex;justify-content:center;
+    padding:40px 0 46px;
+  }
+  .btn{
+    font-family:'Pixelify Sans',monospace;
+    font-size:16px;letter-spacing:1px;
+    color:var(--text);
+    background:var(--surface-2);
+    border:3px solid #0e1011;
+    padding:12px 22px;
+    display:inline-flex;align-items:center;gap:10px;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      5px 5px 0 #000000aa;
+    cursor:default;
+  }
+  .btn .ico{
+    width:14px;height:14px;background:var(--gold);
+    box-shadow:-4px 0 0 var(--bloom);
+    image-rendering:pixelated;
+  }
+
+  /* ---------- K's note ---------- */
+  .note{
+    position:relative;z-index:3;
+    margin:6px auto 0;
+    max-width:520px;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:0 0 0 3px #4a3f30, 6px 6px 0 #000000aa;
+    padding:20px 24px;
+    text-align:center;
+  }
+  .note p{
+    font-family:'Pixelify Sans',monospace;
+    color:var(--gold);
+    font-size:20px;
+    line-height:1.5;
+    margin:0;
+    letter-spacing:.5px;
+  }
+  .note .heart{color:var(--bloom);}
+
+  /* ============ INTENSITY 2 overrides (.full) ============ */
+  .full .bg-checker{
+    position:absolute;inset:0;
+    background-image:
+      repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;
+    opacity:.18;
+    pointer-events:none;z-index:0;
+  }
+  .full .stage > *{position:relative;}
+  .full .focus-card{
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      inset 0 0 0 3px #2c352f,
+      10px 10px 0 0 #000000bb;
+  }
+  /* dithered edge on full focus card */
+  .full .focus-card::after{
+    content:"";position:absolute;left:-6px;right:-6px;bottom:-6px;height:6px;
+    background-image:repeating-linear-gradient(90deg,#0e1011 0 4px, transparent 4px 8px);
+    background-size:8px 6px;
+  }
+  .full .focus-task{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:500;
+    font-size:30px;       /* kept large for legibility */
+    line-height:1.4;
+    letter-spacing:.4px;
+  }
+  .full .hint{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;
+    letter-spacing:.3px;
+  }
+  .full .btn{
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      6px 6px 0 #000000bb;
+    background:linear-gradient(var(--surface-2),#222a26);
+  }
+  .full .shelf{
+    box-shadow:
+      inset 0 6px 0 var(--wood-lite),
+      inset 0 -6px 0 #00000033,
+      0 8px 0 #00000066;
+    background-image:repeating-linear-gradient(90deg,var(--wood) 0 18px, #7e4d2b 18px 20px);
+  }
+  .full .pot .vessel{
+    background-image:repeating-linear-gradient(0deg,var(--terra) 0 6px, #9c5e31 6px 8px);
+  }
+  .full .note{
+    box-shadow:0 0 0 3px #4a3f30, 0 0 0 6px #0e1011, 6px 6px 0 #000000bb;
+  }
+  .full .eyebrow{ text-shadow:2px 2px 0 #00000077; }
+</style>
+</head>
+<body>
+
+<!-- ============================= INTENSITY 1 ============================= -->
+<div>
+  <div class="caption">
+    <span class="badge">INTENSITY 1</span>
+    <h2>Cozy pixel UI</h2>
+    <span>recommended balance — pixel frames &amp; shelf, task text stays readable Inter</span>
+  </div>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+    </div>
+    <div class="stage">
+      <!-- decoration -->
+      <div class="lights">
+        <div class="wire"></div>
+        <div class="bulb" style="left:8%"></div>
+        <div class="bulb" style="left:26%"></div>
+        <div class="bulb" style="left:44%"></div>
+        <div class="bulb" style="left:62%"></div>
+      </div>
+      <div class="bg-window"><div class="mullion-v"></div><div class="mullion-h"></div></div>
+
+      <p class="eyebrow">TODAY</p>
+
+      <div class="focus-wrap">
+        <div class="focus-card">
+          <div class="focus-eyebrow"><span class="pix-leaf"></span> YOUR ONE THING</div>
+          <p class="focus-task">Read one chapter for seminar</p>
+          <p class="hint"><span class="tick">›</span> When you finish, a new sprout joins the shelf. Nothing else is asking for you right now.</p>
+        </div>
+      </div>
+
+      <!-- shelf scene -->
+      <div class="shelf-scene">
+        <div class="pots">
+          <div class="pot">
+            <div class="plant"><span class="sprout">🌱</span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk" style="height:14px"></span><span class="blk deep" style="height:20px"></span><span class="blk" style="height:12px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="sprout">🌿</span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk deep" style="height:16px"></span><span class="blk" style="height:24px"></span><span class="blk bloom" style="height:10px"></span><span class="blk deep" style="height:18px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="sprout">🪴</span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+        </div>
+        <div class="shelf"></div>
+        <div class="shelf-brackets"><span class="bracket l"></span><span class="bracket r"></span></div>
+      </div>
+
+      <div class="footer-bar">
+        <span class="btn"><span class="ico"></span> show me my day</span>
+      </div>
+
+      <div class="note">
+        <p>“Whatever today holds, I'm proud of you. <span class="heart">♥</span> — K”</p>
+      </div>
+      <div style="height:30px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= INTENSITY 2 ============================= -->
+<div>
+  <div class="caption">
+    <span class="badge">INTENSITY 2</span>
+    <h2>Full pixel</h2>
+    <span>committed game-UI — task text also pixel font, dithered edges, layered borders (still large)</span>
+  </div>
+
+  <div class="window full">
+    <div class="bg-checker"></div>
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+    </div>
+    <div class="stage">
+      <div class="lights">
+        <div class="wire"></div>
+        <div class="bulb" style="left:8%"></div>
+        <div class="bulb" style="left:26%"></div>
+        <div class="bulb" style="left:44%"></div>
+        <div class="bulb" style="left:62%"></div>
+        <div class="bulb" style="left:80%"></div>
+      </div>
+      <div class="bg-window"><div class="mullion-v"></div><div class="mullion-h"></div></div>
+
+      <p class="eyebrow">TODAY</p>
+
+      <div class="focus-wrap">
+        <div class="focus-card">
+          <div class="focus-eyebrow"><span class="pix-leaf"></span> YOUR ONE THING</div>
+          <p class="focus-task">Read one chapter for seminar</p>
+          <p class="hint">› When you finish, a new sprout joins the shelf. Nothing else is asking for you right now.</p>
+        </div>
+      </div>
+
+      <div class="shelf-scene">
+        <div class="pots">
+          <div class="pot">
+            <div class="plant"><span class="blk" style="height:10px"></span><span class="blk deep" style="height:14px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk" style="height:14px"></span><span class="blk deep" style="height:22px"></span><span class="blk" style="height:12px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk deep" style="height:12px"></span><span class="blk" style="height:18px"></span><span class="blk bloom" style="height:8px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk deep" style="height:16px"></span><span class="blk" style="height:26px"></span><span class="blk bloom" style="height:10px"></span><span class="blk deep" style="height:20px"></span><span class="blk" style="height:14px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+          <div class="pot">
+            <div class="plant"><span class="blk" style="height:12px"></span><span class="blk bloom" style="height:16px"></span><span class="blk deep" style="height:22px"></span></div>
+            <div class="vessel"></div><div class="cast"></div>
+          </div>
+        </div>
+        <div class="shelf"></div>
+        <div class="shelf-brackets"><span class="bracket l"></span><span class="bracket r"></span></div>
+      </div>
+
+      <div class="footer-bar">
+        <span class="btn"><span class="ico"></span> show me my day</span>
+      </div>
+
+      <div class="note">
+        <p>“Whatever today holds, I'm proud of you. <span class="heart">♥</span> — K”</p>
+      </div>
+      <div style="height:30px"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Home, depth explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pixelify+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --raised:#232A28;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --green:#9DBE9A;
+    --green-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-light:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:#0E1011;
+    color:var(--text);
+    padding:48px 24px 80px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page-head{
+    max-width:1000px;
+    margin:0 auto 40px;
+    text-align:center;
+  }
+  .page-head h1{
+    font-weight:600;
+    font-size:22px;
+    letter-spacing:.02em;
+    color:var(--text);
+  }
+  .page-head p{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:6px;
+  }
+
+  .caption{
+    max-width:1000px;
+    margin:56px auto 14px;
+  }
+  .caption .name{
+    font-weight:600;
+    font-size:16px;
+    color:var(--bloom);
+    letter-spacing:.01em;
+  }
+  .caption .how{
+    color:var(--muted);
+    font-size:13.5px;
+    margin-top:3px;
+  }
+
+  /* desktop window frame */
+  .window{
+    max-width:1000px;
+    margin:0 auto;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 6px 20px rgba(0,0,0,.4);
+    border:1px solid rgba(255,255,255,.04);
+  }
+  .titlebar{
+    height:38px;
+    background:#10120F;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#5a5048;}
+  .dot.y{background:#6b6150;}
+  .dot.g{background:#566a55;}
+  .titlebar .t{
+    margin-left:14px;color:var(--muted);font-size:12px;letter-spacing:.04em;
+  }
+
+  .stage{
+    position:relative;
+    min-height:560px;
+    padding:64px 72px;
+    overflow:hidden;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .focus-task{
+    font-size:34px;
+    font-weight:600;
+    line-height:1.25;
+    color:var(--text);
+    letter-spacing:-.01em;
+  }
+  .next-hint{
+    font-size:14px;
+    color:var(--muted);
+    font-weight:400;
+  }
+  .next-hint .lbl{
+    text-transform:uppercase;letter-spacing:.16em;font-size:10.5px;opacity:.7;margin-right:8px;
+  }
+  .note{
+    font-family:'Pixelify Sans',monospace;
+    color:var(--gold);
+    font-size:21px;
+    line-height:1.45;
+    letter-spacing:.01em;
+  }
+  .note .sig{display:block;margin-top:4px;opacity:.85;font-size:18px;}
+
+  .show-day{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:13px;
+    color:var(--muted);
+    letter-spacing:.04em;
+    cursor:default;
+  }
+  .show-day .chev{
+    width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);
+    transform:rotate(45deg);display:inline-block;
+  }
+
+  /* ---------- pixel plants (shared) ---------- */
+  .pot{
+    position:relative;
+    width:52px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .plant{
+    width:36px;height:42px;position:relative;margin-bottom:-2px;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .px{position:absolute;width:6px;height:6px;}
+  /* terracotta pot built from blocks */
+  .terracotta{
+    width:38px;height:26px;position:relative;
+  }
+  .terracotta .rim{
+    position:absolute;top:0;left:-2px;width:42px;height:7px;background:var(--terra-light);border-radius:1px;
+    box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);
+  }
+  .terracotta .body{
+    position:absolute;top:6px;left:2px;width:34px;height:20px;
+    background:var(--terra);clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);
+    box-shadow:inset -4px 0 0 rgba(0,0,0,.16), inset 4px 0 0 rgba(255,255,255,.05);
+  }
+
+  /* stage 1: sprout */
+  .s1 .stem{width:4px;height:10px;background:var(--green-deep);position:absolute;bottom:0;}
+  .s1 .leaf{width:8px;height:6px;background:var(--green);border-radius:60% 0;position:absolute;bottom:6px;left:6px;transform:rotate(-20deg);}
+  /* stage 2: leafy */
+  .s2 .stem{width:4px;height:22px;background:var(--green-deep);position:absolute;bottom:0;}
+  .s2 .l{width:10px;height:8px;background:var(--green);border-radius:80% 0;position:absolute;}
+  .s2 .l1{bottom:8px;left:4px;transform:rotate(-30deg);}
+  .s2 .l2{bottom:14px;right:4px;transform:rotate(30deg);}
+  .s2 .l3{bottom:20px;left:8px;transform:rotate(-15deg);}
+  /* stage 3: bloom */
+  .s3 .stem{width:4px;height:28px;background:var(--green-deep);position:absolute;bottom:0;}
+  .s3 .l{width:11px;height:9px;background:var(--green);border-radius:80% 0;position:absolute;}
+  .s3 .l1{bottom:8px;left:2px;transform:rotate(-30deg);}
+  .s3 .l2{bottom:16px;right:2px;transform:rotate(30deg);}
+  .s3 .flower{width:14px;height:14px;border-radius:50%;background:var(--bloom);position:absolute;top:-2px;left:11px;box-shadow:0 0 0 3px rgba(233,208,138,.18);}
+  .s3 .flower:after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--terra-light);}
+  /* empty / just-potted: small nub */
+  .s0 .nub{width:6px;height:5px;background:var(--green-deep);position:absolute;bottom:0;border-radius:2px 2px 0 0;}
+
+  .garden-row{display:flex;gap:22px;align-items:flex-end;}
+  .garden-label{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px;
+  }
+  .garden-label .count{color:var(--green);}
+
+  /* ============================================================
+     TREATMENT A — Layered panels
+     ============================================================ */
+  .A{
+    background:
+      radial-gradient(120% 90% at 50% 38%, rgba(224,178,124,.07) 0%, rgba(173,106,56,.03) 30%, transparent 62%),
+      radial-gradient(140% 120% at 50% 50%, transparent 40%, rgba(0,0,0,.45) 100%),
+      var(--base);
+  }
+  .A .layout{position:relative;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:start;z-index:2;}
+  .A .focus-card{
+    background:linear-gradient(160deg,#2A322F 0%,#222926 100%);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:34px 36px 38px;
+    box-shadow:
+      0 26px 50px -12px rgba(0,0,0,.6),
+      0 10px 24px -8px rgba(0,0,0,.5),
+      inset 0 1px 0 rgba(255,255,255,.06);
+    transform:translateZ(0);
+    position:relative;
+    z-index:4;
+  }
+  .A .focus-card .eyebrow{margin-bottom:18px;}
+  .A .focus-card .next-hint{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.06);}
+  .A .note-card{
+    background:#252B23;
+    border:1px solid rgba(224,178,124,.12);
+    border-radius:14px;
+    padding:24px 26px;
+    box-shadow:0 16px 34px -14px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+    z-index:3;
+  }
+  .A .garden-panel{
+    grid-column:1 / -1;
+    margin-top:36px;
+    background:#191D1C;
+    border-radius:16px;
+    padding:26px 30px 30px;
+    box-shadow:
+      inset 0 6px 16px rgba(0,0,0,.55),
+      inset 0 -2px 6px rgba(0,0,0,.4),
+      inset 0 1px 0 rgba(0,0,0,.6);
+    border:1px solid rgba(0,0,0,.5);
+    z-index:1;
+  }
+  .A .show-day{margin-top:30px;}
+
+  /* ============================================================
+     TREATMENT B — The windowsill / shelf scene
+     ============================================================ */
+  .B{
+    background:
+      linear-gradient(180deg,#1C201D 0%,#16191A 55%,#121413 100%);
+    position:relative;
+  }
+  .B:before{ /* dim wall warm gradient */
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(80% 60% at 32% 30%, rgba(173,106,56,.10), transparent 60%);
+    pointer-events:none;
+  }
+  .B .scene{position:relative;z-index:2;}
+  .B .candle-pool{
+    position:absolute;top:-30px;left:-60px;width:520px;height:300px;
+    background:radial-gradient(closest-side, rgba(224,178,124,.20), rgba(224,178,124,.06) 55%, transparent 75%);
+    filter:blur(6px);pointer-events:none;z-index:-1;
+  }
+  .B .focus-task{text-shadow:0 0 30px rgba(224,178,124,.25);}
+  .B .note{margin-top:30px;text-shadow:0 0 16px rgba(224,178,124,.3);}
+  .B .shelf-wrap{margin-top:54px;position:relative;}
+  .B .garden-row{padding:0 6px 0;position:relative;z-index:2;}
+  .B .pot{ }
+  /* shadow under each pot to sit on surface */
+  .B .pot:after{
+    content:"";position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);
+    width:40px;height:9px;border-radius:50%;
+    background:rgba(0,0,0,.55);filter:blur(4px);z-index:-1;
+  }
+  .B .shelf{
+    position:relative;margin-top:0;height:18px;width:100%;
+    background:linear-gradient(180deg,#3A2A1C 0%,#2A1E14 100%);
+    border-radius:2px;
+    box-shadow:
+      0 14px 26px -8px rgba(0,0,0,.6),
+      inset 0 2px 0 rgba(194,129,76,.35),
+      inset 0 -3px 6px rgba(0,0,0,.4);
+  }
+  .B .shelf:before{ /* front edge / thickness */
+    content:"";position:absolute;left:0;right:0;top:18px;height:7px;
+    background:linear-gradient(180deg,#241910,#1A120B);border-radius:0 0 2px 2px;
+    box-shadow:0 16px 30px -10px rgba(0,0,0,.7);
+  }
+  .B .show-day{margin-top:54px;}
+
+  /* ============================================================
+     TREATMENT C — Soft glow & float
+     ============================================================ */
+  .C{
+    background:radial-gradient(130% 110% at 50% 45%, #1A1E1D 0%, #131615 55%, #0E1110 100%);
+    position:relative;
+  }
+  .C .layout{position:relative;z-index:2;text-align:left;}
+  .C .focus-wrap{position:relative;display:inline-block;}
+  .C .focus-wrap:before{
+    content:"";position:absolute;left:-40px;top:-30px;right:-40px;bottom:-30px;
+    background:radial-gradient(closest-side, rgba(224,178,124,.16), rgba(157,190,154,.05) 55%, transparent 72%);
+    filter:blur(14px);z-index:-1;
+  }
+  .C .focus-task{transform:scale(1.02);text-shadow:0 0 26px rgba(224,178,124,.3);}
+  .C .next-hint{margin-top:22px;opacity:.7;}
+  .C .note{
+    position:relative;display:inline-block;margin-top:46px;
+    text-shadow:0 0 20px rgba(233,208,138,.45);
+  }
+  .C .note:before{
+    content:"";position:absolute;left:-30px;top:-22px;right:-30px;bottom:-22px;
+    background:radial-gradient(closest-side, rgba(233,208,138,.22), transparent 70%);
+    filter:blur(12px);z-index:-1;
+  }
+  .C .garden-row{margin-top:56px;gap:34px;}
+  .C .pot{filter:drop-shadow(0 0 1px rgba(0,0,0,.3));}
+  /* completed plants emit faint light; deeper-grown = brighter/larger */
+  .C .pot.glow-s:before{ /* halo */
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-55%);
+    width:64px;height:64px;border-radius:50%;z-index:-1;filter:blur(8px);
+  }
+  .C .pot.lit3:before{background:radial-gradient(closest-side,rgba(233,208,138,.30),transparent 70%);width:78px;height:78px;}
+  .C .pot.lit2:before{background:radial-gradient(closest-side,rgba(157,190,154,.22),transparent 70%);}
+  .C .pot.lit1:before{background:radial-gradient(closest-side,rgba(157,190,154,.14),transparent 70%);width:54px;height:54px;}
+  .C .pot.lit3{transform:scale(1.06);}
+  .C .pot.lit1{transform:scale(.94);opacity:.92;}
+  .C .show-day{margin-top:50px;}
+  .C .garden-label{opacity:.8;}
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <h1>Kept — Home screen, three depth directions</h1>
+    <p>Same content, three ways of adding depth and candlelight. Pick the feeling that lets you exhale.</p>
+  </div>
+
+  <!-- ============ TREATMENT A ============ -->
+  <div class="caption">
+    <div class="name">A · Layered panels</div>
+    <div class="how">Depth through elevation — a vignette + center glow, the focus task lifted on a real drop-shadow, the garden recessed into an inset panel.</div>
+  </div>
+  <div class="window">
+    <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t">Kept</span></div>
+    <div class="stage A">
+      <div class="layout">
+        <div class="focus-card">
+          <div class="eyebrow">Today</div>
+          <div class="focus-task">Read one chapter for seminar</div>
+          <div class="next-hint"><span class="lbl">Next</span>Reply to Dad about the weekend</div>
+        </div>
+        <div class="note-card">
+          <div class="note">Whatever today holds, I'm proud of you.<span class="sig">— K</span></div>
+        </div>
+        <div class="garden-panel">
+          <div class="garden-label">Done garden <span class="count">· 4 growing</span></div>
+          <div class="garden-row">
+            <div class="pot"><div class="plant s3"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="flower"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="l l3"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s1"><span class="stem"></span><span class="leaf"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s0"><span class="nub"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="show-day" style="display:flex">show me my day <span class="chev"></span></div>
+    </div>
+  </div>
+
+  <!-- ============ TREATMENT B ============ -->
+  <div class="caption">
+    <div class="name">B · The windowsill / shelf scene</div>
+    <div class="how">Depth through scene — a radial pool of candlelight behind the task, and pots resting on a real shelf ledge with shadows beneath, so the plants sit rather than float.</div>
+  </div>
+  <div class="window">
+    <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t">Kept</span></div>
+    <div class="stage B">
+      <div class="scene">
+        <div class="candle-pool"></div>
+        <div class="eyebrow">Today</div>
+        <div class="focus-task" style="margin-top:14px;max-width:560px">Read one chapter for seminar</div>
+        <div class="next-hint" style="margin-top:18px"><span class="lbl">Next</span>Reply to Dad about the weekend</div>
+        <div class="note">Whatever today holds, I'm proud of you. <span class="sig" style="display:inline">— K</span></div>
+
+        <div class="shelf-wrap">
+          <div class="garden-row">
+            <div class="pot"><div class="plant s3"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="flower"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="l l3"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s1"><span class="stem"></span><span class="leaf"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+            <div class="pot"><div class="plant s0"><span class="nub"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          </div>
+          <div class="shelf"></div>
+        </div>
+
+        <div class="show-day" style="display:flex">show me my day <span class="chev"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TREATMENT C ============ -->
+  <div class="caption">
+    <div class="name">C · Soft glow &amp; float</div>
+    <div class="how">Depth through light, not boxes — warm halos behind the task and note, completed plants emitting faint glow, layers set apart by glow intensity and scale.</div>
+  </div>
+  <div class="window">
+    <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t">Kept</span></div>
+    <div class="stage C">
+      <div class="layout">
+        <div class="eyebrow">Today</div>
+        <div class="focus-wrap" style="margin-top:18px">
+          <div class="focus-task" style="max-width:560px">Read one chapter for seminar</div>
+        </div>
+        <div class="next-hint"><span class="lbl">Next</span>Reply to Dad about the weekend</div>
+        <div class="note">Whatever today holds, I'm proud of you. <span class="sig" style="display:inline">— K</span></div>
+
+        <div class="garden-label" style="margin-top:50px">Done garden <span class="count">· 4 growing</span></div>
+        <div class="garden-row">
+          <div class="pot glow-s lit3"><div class="plant s3"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="flower"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          <div class="pot glow-s lit2"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span><span class="l l3"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          <div class="pot glow-s lit2"><div class="plant s2"><span class="stem"></span><span class="l l1"></span><span class="l l2"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          <div class="pot glow-s lit1"><div class="plant s1"><span class="stem"></span><span class="leaf"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+          <div class="pot"><div class="plant s0"><span class="nub"></span></div><div class="terracotta"><span class="rim"></span><span class="body"></span></div></div>
+        </div>
+
+        <div class="show-day" style="display:flex">show me my day <span class="chev"></span></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

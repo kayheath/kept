@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kept — Pixel-art Home (real sprites)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#16191A;
+    --surface:#232A28;
+    --surface-2:#2B332F;
+    --text:#E4E5D8;
+    --muted:#9AA08C;
+    --growth:#9DBE9A;
+    --growth-deep:#7BA37F;
+    --terra:#AD6A38;
+    --terra-lite:#C2814C;
+    --gold:#E0B27C;
+    --bloom:#E9D08A;
+    /* shelf wood retinted to MATCH the orange window frame:
+       highlight #C2814C, main #AD694A, shadow/edge #50281D */
+    --wood:#AD694A;
+    --wood-dark:#50281D;
+    --wood-lite:#C2814C;
+    --sky-day-top:#7FB0C9;
+    --sky-day-bot:#A9CBD6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1d2221 0%, var(--base) 60%),
+      var(--base);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    padding:48px 0 80px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    image-rendering:auto;
+  }
+
+  /* ---------- desktop window frame ---------- */
+  .window{
+    width:1000px;
+    max-width:94vw;
+    background:var(--base);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #303a36,
+      10px 10px 0 0 #00000066;
+    image-rendering:pixelated;
+    position:relative;
+    overflow:hidden;
+  }
+  .titlebar{
+    background:var(--surface-2);
+    border-bottom:3px solid #0e1011;
+    height:38px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    gap:8px;
+  }
+  .dot{width:11px;height:11px;background:var(--terra-lite);box-shadow:3px 3px 0 #00000044;}
+  .dot.b{background:var(--growth-deep);}
+  .dot.c{background:var(--gold);}
+  .titlebar .name{
+    margin-left:12px;
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:2px;
+    color:var(--text);
+  }
+
+  .stage{
+    position:relative;
+    padding:54px 60px 0;
+    min-height:600px;
+  }
+
+  /* ---------- subtle checkerboard texture ---------- */
+  .bg-checker{
+    position:absolute;inset:0;
+    background-image:
+      repeating-conic-gradient(#1b201f 0% 25%, transparent 0% 50%);
+    background-size:8px 8px;
+    opacity:.18;
+    pointer-events:none;z-index:0;
+  }
+  .stage > *{position:relative;}
+
+  /* ---------- string lights (left/center, well above content) ---------- */
+  .lights{
+    position:absolute;
+    top:24px;left:40px;
+    width:360px;height:36px;
+    pointer-events:none;z-index:1;
+  }
+  .lights .wire{
+    position:absolute;top:6px;left:0;right:0;height:3px;
+    background:repeating-linear-gradient(90deg,#3a443f 0 8px, transparent 8px 16px);
+    opacity:.55;
+  }
+  .bulb{
+    position:absolute;top:12px;width:8px;height:10px;
+    background:var(--bloom);
+    box-shadow:0 0 0 2px #00000033, 2px 2px 0 #00000044;
+  }
+
+  /* ============================================================
+     CLOCK-WINDOW — REAL pixel-art window sprite, with the time
+     label centered below it so it still reads as a clock.
+     Nudged DOWN ~50px and LEFT ~100px from its prior top-right
+     anchor (was top:34px;right:60px) so it sits inset from the
+     corner — lower and more toward center-right, never jammed in
+     the corner and never overlapping the TODAY eyebrow or card.
+     ============================================================ */
+  .clock-window{
+    position:absolute;
+    top:84px;right:160px;
+    width:112px;
+    z-index:4;
+    text-align:center;
+  }
+  /* the real arched window sprite, scaled ~7x and kept pixel-crisp */
+  .clock-window .window-sprite{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    display:block;
+    width:112px;          /* 16px native * 7 = 112px, height auto stays square-perfect */
+    height:auto;
+    margin:0 auto;
+    /* hard pixel cast shadow, consistent with the rest of the scene */
+    filter:drop-shadow(6px 6px 0 #000000aa);
+  }
+  /* time readout below the window in pixel font — time only, centered */
+  .clock-window .time{
+    margin-top:14px;
+    width:112px;          /* match the window width so it centers beneath it */
+    text-align:center;
+    font-family:'Pixelify Sans',monospace;
+    font-weight:600;
+    font-size:22px;
+    letter-spacing:1px;
+    color:var(--gold);
+    text-shadow:2px 2px 0 #00000088;
+  }
+  .clock-window .time .ampm{font-size:14px;color:var(--gold);letter-spacing:1px;}
+
+  /* ---------- eyebrow (left, nothing overlapping) ---------- */
+  .eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    letter-spacing:5px;
+    font-size:16px;
+    color:var(--gold);
+    margin:0 0 24px;
+    z-index:3;
+    text-shadow:2px 2px 0 #00000077;
+  }
+
+  /* ---------- focus card (lifted, layered pixel border, hard shadow) ---------- */
+  .focus-wrap{position:relative;z-index:3;max-width:640px;}
+  .focus-card{
+    position:relative;
+    background:var(--surface);
+    color:var(--text);
+    padding:30px 32px 28px;
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      inset 0 0 0 3px #2c352f,
+      10px 10px 0 0 #000000bb;   /* HARD offset lift */
+  }
+  .focus-card::before{
+    content:"";position:absolute;top:3px;left:3px;width:28px;height:6px;
+    background:#33403a;
+  }
+  /* dithered bottom edge */
+  .focus-card::after{
+    content:"";position:absolute;left:-6px;right:-6px;bottom:-6px;height:6px;
+    background-image:repeating-linear-gradient(90deg,#0e1011 0 4px, transparent 4px 8px);
+    background-size:8px 6px;
+  }
+  .focus-eyebrow{
+    font-family:'Pixelify Sans',monospace;
+    font-size:13px;letter-spacing:2px;color:var(--muted);
+    display:flex;align-items:center;gap:9px;margin-bottom:16px;
+  }
+  /* pixel PLUS icon */
+  .pix-plus{
+    width:14px;height:14px;display:inline-block;position:relative;
+    image-rendering:pixelated;
+  }
+  .pix-plus::before{content:"";position:absolute;left:5px;top:0;width:4px;height:14px;background:var(--growth);}
+  .pix-plus::after{content:"";position:absolute;top:5px;left:0;width:14px;height:4px;background:var(--growth);}
+  .focus-task{
+    font-family:'Pixelify Sans',monospace;
+    font-weight:500;
+    font-size:32px;
+    line-height:1.4;
+    margin:0 0 18px;
+    color:var(--text);
+    letter-spacing:.4px;
+  }
+  .hint{
+    font-family:'Pixelify Sans',monospace;
+    font-size:15px;
+    color:var(--muted);
+    margin:0;
+    line-height:1.55;
+    letter-spacing:.3px;
+  }
+  .hint .tick{color:var(--growth);}
+
+  /* ---------- shelf scene ---------- */
+  .shelf-scene{
+    position:relative;z-index:2;
+    margin-top:64px;
+    height:196px;
+  }
+  /* Row of REAL plant sprites resting ON the shelf.
+     Shelf top surface sits at bottom:30px of the scene (shelf height 30px,
+     anchored bottom:0). Pot bases align to that line via flex-end + bottom. */
+  .pots{
+    position:absolute;
+    bottom:30px;left:0;right:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:34px;
+    padding:0 50px;
+    z-index:3;
+  }
+  /* every sprite: crisp pixel scaling, sit on its base */
+  .pots img{
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    display:block;
+    height:auto;
+    /* hard pixel contact shadow under the pot, consistent with style */
+    filter:drop-shadow(3px 3px 0 #00000055);
+  }
+  /* uniform 6x upscale via explicit widths (native px * 6) */
+  .pots .p1{width:72px;}  /* plant1_sprout  12x20 */
+  .pots .p2{width:72px;}  /* plant2_small   12x25 */
+  .pots .p3{width:84px;}  /* plant3_medium  14x25 */
+  .pots .p4{width:84px;}  /* plant4_fuller  14x25 */
+  .pots .p5{width:66px;}  /* plant5_vine    11x24 */
+
+  /* ============================================================
+     wooden shelf with brackets that CONNECT to the ledge.
+     Retinted to MATCH the orange window frame wood palette:
+       highlight #C2814C (--wood-lite), main #AD694A (--wood),
+       shadow/edge #50281D (--wood-dark).
+     ============================================================ */
+  .shelf{
+    position:absolute;
+    bottom:0;left:18px;right:18px;
+    height:30px;
+    background:var(--wood);
+    background-image:repeating-linear-gradient(90deg,var(--wood) 0 18px, #98583C 18px 20px);
+    border:3px solid var(--wood-dark);
+    box-shadow:
+      inset 0 6px 0 var(--wood-lite),       /* lit top lip */
+      inset 0 -6px 0 #00000033,
+      0 8px 0 #00000066;                      /* hard cast under shelf */
+    z-index:2;
+  }
+  .shelf::before{
+    /* stepped pixel front edge of the ledge */
+    content:"";position:absolute;left:-3px;right:-3px;bottom:-9px;height:6px;
+    background:var(--wood-dark);
+  }
+  /* Brackets: tucked just inside each end, their TOP meets the shelf
+     underside with NO gap. Built as a stepped/triangular corbel. */
+  .bracket{
+    position:absolute;
+    bottom:-26px;             /* shelf underside sits at bottom:0; 9px cast + flush */
+    width:22px;height:26px;
+    z-index:1;
+  }
+  .bracket.l{left:36px;}
+  .bracket.r{right:36px;}
+  /* stepped corbel face — wider at top (meeting shelf), tapering down */
+  .bracket .step{
+    position:absolute;left:0;
+    background:var(--wood-dark);
+    box-shadow:inset 2px 0 0 #6E3522;
+  }
+  .bracket .s1{top:0;width:22px;height:8px;background:var(--wood);box-shadow:inset 0 3px 0 var(--wood-lite);}
+  .bracket .s2{top:8px;width:17px;height:7px;background:var(--wood-dark);}
+  .bracket .s3{top:15px;width:11px;height:6px;background:var(--wood-dark);}
+  .bracket .s4{top:21px;width:6px;height:5px;background:var(--wood-dark);}
+  /* hard pixel drop shadow on the corbel */
+  .bracket::after{
+    content:"";position:absolute;left:3px;top:3px;width:22px;height:26px;
+    background:#00000055;z-index:-1;
+    clip-path:polygon(0 0,100% 0,100% 31%,77% 31%,77% 58%,50% 58%,50% 81%,27% 81%,27% 100%,0 100%);
+  }
+
+  /* ---------- show me my day affordance ---------- */
+  .footer-bar{
+    position:relative;z-index:3;
+    display:flex;justify-content:center;
+    padding:46px 0 50px;
+  }
+  .btn{
+    font-family:'Pixelify Sans',monospace;
+    font-size:17px;letter-spacing:1px;font-weight:500;
+    color:var(--text);
+    background:linear-gradient(var(--surface-2),#222a26);
+    border:3px solid #0e1011;
+    padding:13px 24px;
+    display:inline-flex;align-items:center;gap:11px;
+    box-shadow:
+      0 0 0 3px #3a463f,
+      0 0 0 6px #0e1011,
+      6px 6px 0 #000000bb;
+    cursor:default;
+  }
+  .btn .ico{
+    width:14px;height:14px;background:var(--gold);
+    box-shadow:-4px 0 0 var(--bloom);
+    image-rendering:pixelated;
+  }
+
+  /* ---------- K's note ---------- */
+  .note{
+    position:relative;z-index:3;
+    margin:8px auto 0;
+    max-width:540px;
+    background:var(--surface);
+    border:3px solid #0e1011;
+    box-shadow:
+      0 0 0 3px #4a3f30,
+      0 0 0 6px #0e1011,
+      6px 6px 0 #000000bb;
+    padding:22px 26px;
+    text-align:center;
+  }
+  .note p{
+    font-family:'Pixelify Sans',monospace;
+    color:var(--gold);
+    font-size:21px;
+    line-height:1.5;
+    margin:0;
+    letter-spacing:.5px;
+  }
+  .note .heart{color:var(--bloom);}
+</style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot b"></span><span class="dot c"></span>
+      <span class="name">Kept</span>
+    </div>
+    <div class="stage">
+      <div class="bg-checker"></div>
+
+      <!-- string lights, anchored left so they never reach the clock -->
+      <div class="lights">
+        <div class="wire"></div>
+        <div class="bulb" style="left:8%"></div>
+        <div class="bulb" style="left:30%"></div>
+        <div class="bulb" style="left:52%"></div>
+        <div class="bulb" style="left:74%"></div>
+      </div>
+
+      <!-- CLOCK-WINDOW: REAL arched window sprite (new orange terracotta frame,
+           blue daytime glass), scaled ~7x. Time-only label centered below.
+           Nudged down ~50px and left ~100px from the prior corner anchor.
+           ?v=3 appended to bust any browser cache of the replaced sprite. -->
+      <div class="clock-window">
+        <img class="window-sprite" src="./sprites/window_day.png?v=3" alt="arched window, orange terracotta frame, daytime blue glass">
+        <div class="time">2:14 <span class="ampm">PM</span></div>
+      </div>
+
+      <!-- TODAY eyebrow + focus card sit clean on the left/center -->
+      <p class="eyebrow">TODAY</p>
+
+      <div class="focus-wrap">
+        <div class="focus-card">
+          <div class="focus-eyebrow"><span class="pix-plus"></span> YOUR ONE THING</div>
+          <p class="focus-task">Read one chapter for seminar</p>
+          <p class="hint"><span class="tick">›</span> When you finish, a new sprout joins the shelf. Nothing else is asking for you right now.</p>
+        </div>
+      </div>
+
+      <!-- shelf scene -->
+      <div class="shelf-scene">
+        <!-- REAL pixel-art plant sprites, 6x upscaled, pots resting on the shelf top -->
+        <div class="pots">
+          <img class="p1" src="./sprites/plant1_sprout.png" alt="potted sprout">
+          <img class="p2" src="./sprites/plant2_small.png" alt="small potted plant">
+          <img class="p3" src="./sprites/plant3_medium.png" alt="medium potted plant">
+          <img class="p4" src="./sprites/plant4_fuller.png" alt="fuller potted plant">
+          <img class="p5" src="./sprites/plant5_vine.png" alt="potted vine">
+        </div>
+
+        <div class="shelf"></div>
+        <!-- corbels anchored to the shelf underside, flush, no gap -->
+        <span class="bracket l">
+          <span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span>
+        </span>
+        <span class="bracket r">
+          <span class="step s1"></span><span class="step s2"></span><span class="step s3"></span><span class="step s4"></span>
+        </span>
+      </div>
+
+      <div class="footer-bar">
+        <span class="btn"><span class="ico"></span> show me my day</span>
+      </div>
+
+      <div class="note">
+        <p>“Whatever today holds, I'm proud of you. <span class="heart">♥</span> — K”</p>
+      </div>
+      <div style="height:36px"></div>
+    </div>
+  </div>
+
+</body>
+</html>
