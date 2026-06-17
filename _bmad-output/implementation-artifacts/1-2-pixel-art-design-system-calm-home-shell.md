@@ -4,7 +4,7 @@ baseline_commit: 02356ae07a4013338d22d86b396298a882242ffb
 
 # Story 1.2: Pixel-art design system & calm Home shell
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
