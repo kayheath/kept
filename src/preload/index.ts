@@ -1,12 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
 import { CHANNELS } from '../shared/ipc-contract'
 import type { KeptApi } from '../shared/types'
 
 // The typed bridge. The preload only forwards ipcRenderer.invoke calls — it does
 // NOT validate, import the repo, or touch the DB (validation is main-side, AR6).
-// Importing src/shared is safe under sandbox: true because it compiles to pure
-// JS strings/types (channel constants) — no Node built-ins, no Zod runtime.
+//
+// Self-contained by necessity: with `sandbox: true` (AR7 hardening) a preload may
+// only `require('electron')` and Node built-ins — NOT third-party packages. So
+// this file depends on `electron` alone. Importing `../shared/ipc-contract` is
+// safe because it compiles to plain JS constants (channel names) that the bundler
+// inlines — no Node built-ins, no Zod runtime, no node_modules require survives.
 const kept: KeptApi = {
   tasks: {
     create: (input) => ipcRenderer.invoke(CHANNELS.tasksCreate, input),
@@ -14,19 +17,17 @@ const kept: KeptApi = {
   }
 }
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+// Expose the bridge. With context isolation on (AR7) this crosses via the
+// contextBridge; the else branch is a defensive fallback for a non-isolated
+// context. The renderer programs only against `window.kept` — it never sees
+// `ipcRenderer` or channel names.
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('kept', kept)
   } catch (error) {
     console.error(error)
   }
 } else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
   // @ts-ignore (define in dts)
   window.kept = kept
 }
